@@ -139,7 +139,7 @@ watch(
                         <div class="text-900 font-medium text-xl">Nueva reservación</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width: 2.5rem; height: 2.5rem">
-                        <i class="pi pi-arrow-right text-orange-500 text-xl"></i>
+                        <i class="pi pi-pencil text-orange-500 text-xl"></i>
                     </div>
                 </div>
             </div>
@@ -152,7 +152,7 @@ watch(
                         <div class="text-900 font-medium text-xl">Nueva estancia</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" style="width: 2.5rem; height: 2.5rem">
-                        <i class="pi pi-chevron-right text-cyan-500 text-xl"></i>
+                        <i class="pi pi-plus text-cyan-500 text-xl"></i>
                     </div>
                 </div>
             </div>
@@ -161,20 +161,20 @@ watch(
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Facturas hechas hoy</span>
-                        <div class="text-900 font-medium text-xl">15</div>
+                        <span class="block text-500 font-medium mb-3">Facturación</span>
+                        <div class="text-900 font-medium text-xl">Nueva factura</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-purple-100 border-round" style="width: 2.5rem; height: 2.5rem">
-                        <i class="pi pi-arrow-right text-purple-500 text-xl"></i>
+                        <i class="pi pi-book text-purple-500 text-xl"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-12 xl:col-6">
+        <div class="col-12 xl:col-7">
             <div class="card">
                 <h5>Recent Sales</h5>
-                <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
+                <DataTable :value="products" :rows="10" :paginator="true" class="mt-5" responsiveLayout="scroll">
                     <Column style="width: 15%">
                         <template #header> Image </template>
                         <template #body="slotProps">
@@ -195,8 +195,15 @@ watch(
                     </Column>
                 </DataTable>
             </div>
+            
+        </div>
+        <div class="col-12 xl:col-5">
             <div class="card">
-                <div class="flex justify-content-between align-items-center mb-5">
+                <h5 class="mr-8">Calendario</h5>
+                <Calendar class="flex justify-content-center mt-5" v-model="date" inline showWeek />
+            </div>
+            <div class="card">
+                <div class="flex justify-content-between align-items-center mb-4">
                     <h5>Best Selling Products</h5>
                     <div>
                         <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu2.toggle($event)"></Button>
@@ -264,25 +271,7 @@ watch(
                             <span class="text-purple-500 ml-3 font-medium">%75</span>
                         </div>
                     </li>
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Robots T-Shirt</span>
-                            <div class="mt-1 text-600">Clothing</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-teal-500 h-full" style="width: 40%"></div>
-                            </div>
-                            <span class="text-teal-500 ml-3 font-medium">%40</span>
-                        </div>
-                    </li>
                 </ul>
-            </div>
-        </div>
-        <div class="col-12 xl:col-6">
-            <div class="card">
-                <h5 class="mr-8">Calendario</h5>
-                <Calendar class="flex justify-content-center mt-5" v-model="date" inline showWeek />
             </div>
         </div>
     </div>
