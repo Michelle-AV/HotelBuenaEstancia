@@ -1,6 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import AppConfig from '@/layout/AppConfig.vue';
 
 const { layoutConfig } = useLayout();
@@ -11,8 +11,19 @@ const smoothScroll = (id) => {
     });
 };
 
+onMounted(() => {
+    // Tu código aquí
+    (function(d, m){
+        var kommunicateSettings = {"appId":"855b06296d3f97ea04a3408a6dc3deee","popupWidget":true,"automaticChatOpenOnNavigation":true};
+        var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+        s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+        var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+        window.kommunicate = m; m._globals = kommunicateSettings;
+      })(document, window.kommunicate || {});
+});
+
 const logoUrl = computed(() => {
-    return `layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
+    return `layout/images/${layoutConfig.darkTheme.value ? 'h-square-white' : 'h-square-dark'}.png`;
 });
 </script>
 
@@ -20,7 +31,7 @@ const logoUrl = computed(() => {
     <div class="surface-0 flex justify-content-center">
         <div id="home" class="landing-wrapper overflow-hidden">
             <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3">
-                <a class="flex align-items-center" href="#"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-0 lg:mr-2" /><span class="text-900 font-medium text-2xl line-height-3 mr-8">SAKAI</span> </a>
+                <a class="flex align-items-center" href="#"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-0 lg:mr-2" /><span class="text-900 font-medium text-2xl mr-8">Hotel BUES</span> </a>
                 <a class="cursor-pointer block lg:hidden text-700 p-ripple" v-ripple v-styleclass="{ selector: '@next', enterClass: 'hidden', leaveToClass: 'hidden', hideOnOutsideClick: true }">
                     <i class="pi pi-bars text-4xl"></i>
                 </a>
@@ -32,18 +43,8 @@ const logoUrl = computed(() => {
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#features')" class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 p-ripple" v-ripple>
-                                <span>Features</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="smoothScroll('#highlights')" class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 p-ripple" v-ripple>
-                                <span>Highlights</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="smoothScroll('#pricing')" class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 p-ripple" v-ripple>
-                                <span>Pricing</span>
+                            <a @click="smoothScroll('#contactus')" class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 p-ripple" v-ripple>
+                                <span>Contactanos</span>
                             </a>
                         </li>
                     </ul>
@@ -359,46 +360,21 @@ const logoUrl = computed(() => {
                 </div>
             </div>
 
-            <div class="py-4 px-4 mx-0 mt-8 lg:mx-8">
+            <div id="contactus" class="py-4 px-4 mx-0 mt-8 lg:mx-8">
                 <div class="grid justify-content-between">
                     <div class="col-12 md:col-2" style="margin-top: -1.5rem">
                         <a @click="smoothScroll('#home')" class="flex flex-wrap align-items-center justify-content-center md:justify-content-start md:mb-0 mb-3 cursor-pointer">
                             <img :src="logoUrl" alt="footer sections" width="50" height="50" class="mr-2" />
-                            <h4 class="font-medium text-3xl text-900">SAKAI</h4>
+                            <h4 class="font-medium text-3xl text-900">Hotel BUES</h4>
                         </a>
                     </div>
-
                     <div class="col-12 md:col-10 lg:col-7">
-                        <div class="grid text-center md:text-left">
-                            <div class="col-12 md:col-3">
-                                <h4 class="font-medium text-2xl line-height-3 mb-3 text-900">Company</h4>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">About Us</a>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">News</a>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">Investor Relations</a>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">Careers</a>
-                                <a class="line-height-3 text-xl block cursor-pointer text-700">Media Kit</a>
-                            </div>
-
-                            <div class="col-12 md:col-3 mt-4 md:mt-0">
-                                <h4 class="font-medium text-2xl line-height-3 mb-3 text-900">Resources</h4>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">Get Started</a>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">Learn</a>
-                                <a class="line-height-3 text-xl block cursor-pointer text-700">Case Studies</a>
-                            </div>
-
-                            <div class="col-12 md:col-3 mt-4 md:mt-0">
-                                <h4 class="font-medium text-2xl line-height-3 mb-3 text-900">Community</h4>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">Discord</a>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">Events<img src="/demo/images/landing/new-badge.svg" class="ml-2" /></a>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">FAQ</a>
-                                <a class="line-height-3 text-xl block cursor-pointer text-700">Blog</a>
-                            </div>
-
-                            <div class="col-12 md:col-3 mt-4 md:mt-0">
-                                <h4 class="font-medium text-2xl line-height-3 mb-3 text-900">Legal</h4>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">Brand Policy</a>
-                                <a class="line-height-3 text-xl block cursor-pointer mb-2 text-700">Privacy Policy</a>
-                                <a class="line-height-3 text-xl block cursor-pointer text-700">Terms of Service</a>
+                        <div class="grid md:flex md:justify-end ml-8">
+                            <div class="col-12 md:col-3 mt-4 md:mt-0 text-left w-full p-0">
+                                <h4 class="font-medium text-2xl line-height-3 mb-3 text-900">Preguntas Frecuentes</h4>
+                                <router-link to="/test" class="line-height-3 text-xl block cursor-pointer mb-2 text-700">
+                                    <i class="pi pi-question-circle"></i> FAQ
+                                </router-link>
                             </div>
                         </div>
                     </div>
@@ -406,7 +382,6 @@ const logoUrl = computed(() => {
             </div>
         </div>
     </div>
-    <AppConfig simple />
 </template>
 
 <!-- <style scoped>

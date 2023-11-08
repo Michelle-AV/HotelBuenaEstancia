@@ -80,7 +80,12 @@ const router = createRouter({
             path: '/auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
-        }
+        },
+        {
+            path: '/test',
+            name: 'Testing',
+            component: () => import('@/views/pages/Tests/sockets.vue')
+        },
     ]
 });
 

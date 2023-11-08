@@ -59,6 +59,7 @@ const model = ref([
         label: 'Facturación',
         items: [{ label: 'Generar factura', icon: 'pi pi-fw pi-book', to: '/factura' }]
     },
+ 
     {
         label: 'Pages',
         icon: 'pi pi-fw pi-briefcase',

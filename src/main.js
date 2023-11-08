@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
+import VueSocketIO from 'vue-3-socket.io';
 
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
@@ -111,6 +112,11 @@ app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
+app.use(
+    new VueSocketIO({
+        connection: 'http://localhost:3000'
+    })
+);
 
 app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);
