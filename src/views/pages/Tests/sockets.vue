@@ -24,6 +24,7 @@ export default {
         },
         'database result'(data) {
             console.log('Datos de la base de datos recibidos:', data);
+            this.messages = data;
         }
     },
     computed: {
@@ -32,11 +33,23 @@ export default {
         }
     },
     methods: {
-        sendMessage() {
+        sendMessage(value) {
+            // if (this.message.trim() !== '') {
+            //     this.$socket.emit('chat message', this.message);
+            //     this.message = '';
+            // }}
+
+            // this.$socket.emit('chat message', value);
             if (this.message.trim() !== '') {
+                console.log('Sending message:', this.message);
                 this.$socket.emit('chat message', this.message);
                 this.message = '';
             }
+        },
+
+        sendQuestion(questionNumber) {
+      // Envia un mensaje al servidor con el número de la pregunta
+            this.$socket.emit('chat message', questionNumber.toString());
         }
     }
 };
@@ -65,8 +78,11 @@ export default {
                     </div>
                 </div>
                 <div id="app" class="flex justify-content-center mb-3">
-                    <Button severity="info" label="¿Cuántas habitaciones hay libres para hoy?" text raised/>
-                    <Button severity="info" label="¿Qué servicios manejan?" text raised class="ml-5"/>
+                    <!-- <Button id="btn1" severity="info" label="¿Cuántas habitaciones hay libres para hoy?" text raised @click="sendMessage"/> -->
+                    
+                    <Button id="btn1" severity="info" label="¿Cuántas habitaciones hay libres para hoy?" text raised @click="sendQuestion(1)"/>
+                    <Button id="btn2" severity="info" label="¿Que servicios se manejan?" text raised @click="sendQuestion(2)"/>
+
                     <Button severity="info" label="¿Cúal es el precio de los servicios que manejan?" text raised class="ml-5"/>
                     <Button severity="info" label="¿Qué tipos de habitaciones hay y su precio?" text raised class="ml-5"/>
                     <!-- <input v-model="message" @keyup.enter="sendMessage" />
