@@ -1,5 +1,101 @@
-<script>
+<template>
+    <div class="flex flex-column align-items-center justify-content-center">
+        <div class="col-10 mx-auto semi-circle-container mt-5">
+            <div class="card card-content">
+                <div class="flex align-items-center justify-content-center mt-5">
+                    <h1 class="txtcolor1" style="font-size: 4em"><strong>PREGUNTAS FRECUENTES</strong></h1>
+                    <!-- <i class="pi pi-question-circle" style="font-size: 2em; vertical-align: middle"></i> -->
+                </div>
+                <div class="flex align-items-center justify-content-center mt-3">
+                    <div class="text-icon-group">
+                        <h5 style="color: #ffff">Con respuestas actualizadas y en tiempo real</h5>
+                    </div>
+                </div>
 
+                <!-- FAQ -->
+                <div class="col-12 mt-5">
+                    <div class="card">
+                        <Button id="btn1" label="¿Cuántas habitaciones hay libres para hoy?" @click="sendQuestion(1)" />
+                        <transition name="fade">
+                        <div v-if="currentQuestion === 1" class="response card">
+                            <ul>
+                                <h6>¡Explora las habitaciones disponibles para reservar el día de hoy! Cada una ha sido preparada con esmero para asegurar una experiencia de descanso y relajación inigualable.</h6>
+                                <li v-for="(message, index) in messages" :key="index">Alrededor de {{ message.cantidad }} habitacion(es) de tipo {{ message.tipohabitacion }} al momento de realizar esta consulta.</li>
+                            </ul>
+                        </div>
+                    </transition>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <Button id="btn1" label="¿Qué servicios manejan?" @click="sendQuestion(2)" />
+                        <transition name="fade">
+                        <div v-if="currentQuestion === 2" class="response card">
+                            <ul>
+                                <h6>
+                                    ¡Bienvenido a la comodidad y el lujo sin precedentes! Nuestro hotel está dedicado a ofrecer una experiencia inigualable con una amplia gama de servicios pensados para cada uno de nuestros huéspedes. Entre los
+                                    servicios que puedes solicitar se encuentran:
+                                </h6>
+                                <li v-for="(message, index) in messages" :key="index">El servicio de {{ message.desc_servicio }}, con un precio de ${{ message.precio_servicio }}</li>
+                            </ul>
+                        </div>
+                        </transition>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <Button id="btn1" label="¿El hotel ofrece algun paquete especial?" @click="sendQuestion(3)" />
+                        <transition name="fade">
+                        <div v-if="currentQuestion === 3" class="response card">
+                            <h6>
+                                ¡Claro! Nuestro hotel ofrece paquetes especiales exclusivamente diseñados para los días festivos, brindando a nuestros huéspedes una experiencia festiva única y memorable. Estos paquetes incluyen comodidades y
+                                actividades temáticas para que celebres las fiestas en gran estilo, desde cenas de gala hasta entretenimiento en vivo y decoraciones que capturan el espíritu de la temporada. Para más información sobre nuestros
+                                paquetes de días festivos y para realizar su reserva, le invitamos a contactar a nuestro equipo de reservaciones o revisar a fondo nuestra página web.
+                            </h6>
+                        </div>
+                        </transition>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <Button id="btn1" label="¿Qué tipo de habitaciones hay?" @click="sendQuestion(4)" />
+                        <transition name="fade">
+                        <div v-if="currentQuestion === 4" class="response card">
+                            <ul>
+                                <h6>
+                                    ¡Descubre el espacio perfecto para tu escape ideal! Nuestros tipos de habitaciones están diseñados para proporcionar el máximo confort y estilo, adaptándose a todas tus necesidades. ¡Elige la tuya y vive la
+                                    experiencia de hospedaje que siempre has soñado!
+                                </h6>
+                                <li v-for="(message, index) in messages" :key="index">
+                                    Habitación {{ message.desc_hab }} desde ${{ message.precio_hab }} con una cantidad de {{ message.cant_camas }} cama(s) y con espacio hasta para {{ message.cant_personas }} persona(s).
+                                </li>
+                            </ul>
+                        </div>
+                        </transition>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <Button id="btn1" label="¿Cuál es el proceso a seguir para recibir un reembolso?" @click="sendQuestion(5)" />
+                        <transition name="fade">
+                        <div v-if="currentQuestion === 5" class="response card">
+                            <h6>
+                                Para realizar un reembolso, nuestro hotel sigue un proceso claro y sencillo para garantizar la satisfacción del cliente. Si necesita cancelar su reserva, simplemente póngase en contacto con nuestro equipo de atención
+                                al cliente con su número de confirmación a la mano. Nuestros representantes revisarán los términos de su tarifa y le guiarán a través de los pasos necesarios para procesar su reembolso. Le recomendamos revisar nuestra
+                                política de cancelación y reembolso, ya que puede haber plazos específicos y condiciones para ser elegible para un reembolso completo o parcial. Estamos comprometidos a manejar su solicitud de manera eficiente y a
+                                asegurarnos de que su experiencia sea lo más fluida posible.
+                            </h6>
+                        </div>
+                        </transition>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+</template>
+
+  <script>
 import { useLayout } from '@/layout/composables/layout';
 import { computed } from 'vue';
 import AppFooter from '@/layout/AppFooter.vue';
@@ -9,10 +105,10 @@ const { layoutConfig } = useLayout();
 
 export default {
     data() {
-
         return {
             message: '',
             messages: [],
+            currentQuestion: null
         };
     },
     sockets: {
@@ -34,12 +130,6 @@ export default {
     },
     methods: {
         sendMessage(value) {
-            // if (this.message.trim() !== '') {
-            //     this.$socket.emit('chat message', this.message);
-            //     this.message = '';
-            // }}
-
-            // this.$socket.emit('chat message', value);
             if (this.message.trim() !== '') {
                 console.log('Sending message:', this.message);
                 this.$socket.emit('chat message', this.message);
@@ -48,47 +138,102 @@ export default {
         },
 
         sendQuestion(questionNumber) {
-      // Envia un mensaje al servidor con el número de la pregunta
+            this.currentQuestion = questionNumber;
             this.$socket.emit('chat message', questionNumber.toString());
         }
     }
 };
 </script>
+  
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-<template>
-    <div class="grid">
-        <div class="col-12">
-            <router-link to="/landing" class="flex align-items-center text-center ml-3 mt-3">
-                <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-0 lg:mr-2" />
-                <span class="text-900 font-medium text-2xl mr-8">Hotel BUES</span>
-            </router-link>
-            <h1 class="text-center mt-6">Bienvenido a la sección de Preguntas Frecuentes</h1>
-            
-            <div class="card col-11 h-100 ml-8">
-                <div
-                    class="col-12 mt-8 mb-8 p-2 md:p-8"
-                    style="border-radius: 20px; background: #CFE9FB"
-                >
-                    <div class="flex flex-column justify-content-center align-items-center text-center px-3 py-3 md:py-0">
-                        <h3 class="text-gray-900 mb-2">Respuestas del servidor</h3>
-                        <!-- <span class="text-gray-600 text-2xl">Peak Interactive</span> -->
-                        <p class="text-gray-900 sm:line-height-2 md:line-height-4 text-left text-2xl mt-4" style="max-width: 800px">
-                            “Acá irían las respuestas del servidor.”
-                        </p>
-                    </div>
-                </div>
-                <div id="app" class="flex justify-content-center mb-3">
-                    <!-- <Button id="btn1" severity="info" label="¿Cuántas habitaciones hay libres para hoy?" text raised @click="sendMessage"/> -->
-                    
-                    <Button id="btn1" severity="info" label="¿Cuántas habitaciones hay libres para hoy?" text raised @click="sendQuestion(1)"/>
-                    <Button id="btn2" severity="info" label="¿Que servicios se manejan?" text raised @click="sendQuestion(2)"/>
+.response {
+    margin-top: 1rem;
+}
 
-                    <Button severity="info" label="¿Cúal es el precio de los servicios que manejan?" text raised class="ml-5"/>
-                    <Button severity="info" label="¿Qué tipos de habitaciones hay y su precio?" text raised class="ml-5"/>
-                    <!-- <input v-model="message" @keyup.enter="sendMessage" />
-                    <button @click="sendMessage">Send</button> -->
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 5em;
+    margin-right: 0.1em;
+}
+
+.text-icon-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h5 {
+    color: #454545;
+    margin-top: 0.1em;
+}
+
+.semi-circle-container {
+    position: relative;
+    z-index: 1;
+}
+
+.semi-circle-container::before {
+    content: '';
+    position: absolute;
+    width: 1800px;
+    height: 800px;
+    background: #212267;
+    border-radius: 50%;
+    top: -230px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+.txtcolor1 {
+    color: rgb(254, 254, 254);
+}
+.card-content {
+    margin-top: 7%;
+}
+
+.flex-column {
+    overflow-x: hidden;
+}
+
+.card-content {
+    z-index: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-content::before {
+    content: '';
+    position: absolute;
+    width: 1800px;
+    height: 800px;
+    background: #2d2e8b;
+    border-radius: 50%;
+    top: -320px;
+    left: -380px;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.fade-enter-active {
+  transition: opacity 1.5s ease;
+}
+
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+
+</style>
+  
