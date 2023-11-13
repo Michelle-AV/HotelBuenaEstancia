@@ -83,13 +83,11 @@ const logoUrl = computed(() => {
                 class="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden"
                 style="background-image: url('/demo/images/landing/fondo1.jpeg'); background-size: cover; background-position: center; height: 100vh; ">
                 <div class="mx-4 md:mx-8 mt-0 md:mt-4">
-                    <h1 class="text-6xl font-bold text-gray-900 line-height-2"><span class="font-light block">Explora el lujo auténtico </span>y el encanto en el Hotel Buena Estancia</h1>
-                    <p class="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">Donde cada hospedaje es una experiencia inolvidable.</p>
-                    <Button label="Más información" class="p-button-rounded text-xl border-none mt-5 bg-blue-500 font-normal text-white line-height-3 px-3"></Button>
+                    <h1 class="texto-blanco text-6xl font-bold line-height-2 "><span class="font-light block texto-blanco">Explora el lujo auténtico </span>y el encanto en el Hotel Buena Estancia</h1>
+                    <p class="font-normal text-2xl line-height-3 md:mt-3 texto-blanco">Donde cada hospedaje es una experiencia inolvidable.</p>
+                    <Button label="Más información" class="p-button-rounded text-xl border-none mt-5 bg-white font-normal line-height-3 px-3"></Button>
                 </div>
-                <!-- <div class="flex justify-content-center md:justify-content-end">
-                    <img src="/demo/images/landing/screen-1.png" alt="Hero Image" class="w-9 md:w-auto" />
-                </div> -->
+               
             </div>
             <!--fin del div-->
 
