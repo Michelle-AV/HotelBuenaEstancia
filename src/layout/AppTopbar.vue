@@ -18,7 +18,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-    return `layout/images/${layoutConfig.darkTheme.value ? 'h-square-white' : 'h-square-dark'}.png`;
+    return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo' : 'BE-logo'}.png`;
 });
 
 const onTopBarMenuButton = () => {
@@ -26,7 +26,7 @@ const onTopBarMenuButton = () => {
 };
 const onSettingsClick = () => {
     topbarMenuActive.value = false;
-    router.push('/documentation');
+    router.push('/landing');
 };
 const topbarMenuClasses = computed(() => {
     return {
@@ -62,9 +62,9 @@ const isOutsideClicked = (event) => {
 
 <template>
     <div class="layout-topbar">
-        <router-link to="/" class="layout-topbar-logo">
+        <router-link to="/dashboard" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
-            <span class="mr-3">Hotel Buena Vista</span>
+            <span class="mr-3">Hotel Buena Estancia</span>
         </router-link>
 
         <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">

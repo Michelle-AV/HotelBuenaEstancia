@@ -6,7 +6,7 @@ import AppMenuItem from './AppMenuItem.vue';
 const model = ref([
     {
         label: 'Menú',
-        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' }]
     },
     {
         label: 'Clientes',
@@ -44,7 +44,7 @@ const model = ref([
                 to: '/historial/habitaciones'
             },
             {
-                label: 'Servicios consumidos',
+                label: 'Servicios',
                 icon: 'pi pi-fw pi-id-card',
                 to: '/historial/servicios'
             },
@@ -59,7 +59,10 @@ const model = ref([
         label: 'Facturación',
         items: [{ label: 'Generar factura', icon: 'pi pi-fw pi-book', to: '/factura' }]
     },
- 
+    {
+        label: 'ADMIN',
+        items: [{ label: 'Crear cuenta', icon: 'pi pi-fw pi-user', to: '/createacc' }]
+    },
     {
         label: 'Pages',
         icon: 'pi pi-fw pi-briefcase',

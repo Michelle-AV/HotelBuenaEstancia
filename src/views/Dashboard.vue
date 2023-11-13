@@ -118,7 +118,7 @@ watch(
 
 <template>
     <div class="grid">
-        <div class="col-12 lg:col-6 xl:col-3">
+        <router-link to="/historial/habitaciones" class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -130,8 +130,8 @@ watch(
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 lg:col-6 xl:col-3">
+        </router-link>
+        <router-link to="/reservacion/registrar" class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -143,8 +143,8 @@ watch(
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 lg:col-6 xl:col-3">
+        </router-link>
+        <router-link to="/estancias" class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -156,8 +156,8 @@ watch(
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 lg:col-6 xl:col-3">
+        </router-link>
+        <router-link to="/factura" class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -169,7 +169,7 @@ watch(
                     </div>
                 </div>
             </div>
-        </div>
+        </router-link>
 
         <div class="col-12 xl:col-7">
             <div class="card">

@@ -1,15 +1,40 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
+import Login from '@/views/pages/auth/Login.vue';
+
+const isAuthenticated = () => {
+    // Lógica para verificar si el usuario está autenticado
+    // Puedes almacenar el estado de autenticación en Vuex, localStorage, etc.
+    // Devuelve true si está autenticado, false si no lo está.
+    return /* lógica de autenticación */;
+  };
+
+const requireAuth = (to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        // Esta ruta requiere autenticación
+        if (!isAuthenticated()) {
+            // No está autenticado, redirige a la página de inicio de sesión
+            next('/auth/login');
+        } else {
+            // Está autenticado, permite el acceso
+            next();
+        }
+    } else {
+        // Esta ruta no requiere autenticación, permite el acceso
+        next();
+    }
+};
 
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [
         {
             path: '/',
+            redirect: '/landing',
             component: AppLayout,
             children: [
                 {
-                    path: '/',
+                    path: '/dashboard',
                     name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue')
                 },
@@ -53,6 +78,11 @@ const router = createRouter({
                     name: 'Facturacion',
                     component: () => import('@/views/pages/facturacion/nuevaFactura.vue')
                 },
+                {
+                    path: '/createacc',
+                    name: 'Crear Cuenta',
+                    component: () => import('@/views/pages/Admin/createAccount.vue')
+                },
             ]
         },
         {
@@ -88,5 +118,7 @@ const router = createRouter({
         },
     ]
 });
+
+router.beforeEach(requireAuth);
 
 export default router;

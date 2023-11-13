@@ -12,9 +12,8 @@ const smoothScroll = (id) => {
 };
 
 onMounted(() => {
-    // Tu código aquí
     (function(d, m){
-        var kommunicateSettings = {"appId":"855b06296d3f97ea04a3408a6dc3deee","popupWidget":true,"automaticChatOpenOnNavigation":true};
+        var kommunicateSettings = {"appId":"855b06296d3f97ea04a3408a6dc3deee","popupWidget":false,"automaticChatOpenOnNavigation":true};
         var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
         s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
         var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
@@ -25,6 +24,7 @@ onMounted(() => {
 const logoUrl = computed(() => {
     return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo' : 'BE-logo'}.png`;
 });
+
 </script>
 
 <template>
@@ -32,7 +32,7 @@ const logoUrl = computed(() => {
         <div id="home" class="landing-wrapper overflow-hidden">
             <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3">
                 <!-- <a class="flex align-items-center" href="#"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-0 lg:mr-2" /><span class="text-900 font-medium text-2xl mr-8">Hotel BUES</span> </a> -->
-                <a class="flex align-items-center" href="#"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-2 lg:mr-4" />
+                <a class="flex align-items-center" href="/"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-2 lg:mr-4" />
                     <!-- <span class="text-900 font-medium text-2xl" style="white-space: nowrap;">Hotel Buena Estancia</span> -->
                     <!-- <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap;">Hotel Buena Estancia</span> -->
                     <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap;">Hotel BUES</span>
@@ -71,8 +71,11 @@ const logoUrl = computed(() => {
                         </li>
                     </ul>
                     <div class="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
-                        <Button label="Iniciar Sesión" class="p-button-text p-button-rounded border-none font-light line-height-2 text-blue-500"></Button>
-                        <Button label="Registrarse" class="p-button-rounded border-none ml-4 font-light text-white line-height-2 bg-blue-500"></Button>
+                        <!-- <Button label="Login" class="p-button-text p-button-rounded border-none font-light line-height-2 text-blue-500"></Button> -->
+                        <router-link to="/auth/login" class="p-button p-button-text p-button-rounded border-none font-light line-height-2 text-blue-500">
+                            <strong>Login</strong>
+                        </router-link>
+                        <!-- <Button label="Register" class="p-button-rounded border-none ml-5 font-light text-white line-height-2 bg-blue-500"></Button> -->
                     </div>
                 </div>
             </div>

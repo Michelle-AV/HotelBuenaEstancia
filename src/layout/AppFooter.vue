@@ -5,15 +5,15 @@ import { computed } from 'vue';
 const { layoutConfig } = useLayout();
 
 const logoUrl = computed(() => {
-    return `layout/images/${layoutConfig.darkTheme.value ? 'h-square-white' : 'h-square-dark'}.png`;
+    return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo' : 'BE-logo'}.png`;
 });
 </script>
 
 <template>
     <div class="layout-footer">
         <img :src="logoUrl" alt="Logo" height="20" class="mr-2" />
-        En
-        <span class="font-medium ml-2">Proceso</span>
+        <!-- En
+        <span class="font-medium ml-2">Proceso</span> -->
     </div>
 </template>
 <style lang="scss" scoped></style>
