@@ -1,38 +1,90 @@
-<script setup>
+<script >
 import { useLayout } from '@/layout/composables/layout';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, onBeforeUnmount } from 'vue';
 import AppConfig from '@/layout/AppConfig.vue';
 import Button from 'primevue/button';
 
-const { layoutConfig } = useLayout();
 
-const smoothScroll = (id) => {
-    document.querySelector(id).scrollIntoView({
-        behavior: 'smooth'
-    });
-};
-
-onMounted(() => {
-    (function(d, m){
-        var kommunicateSettings = {"appId":"855b06296d3f97ea04a3408a6dc3deee","popupWidget":false,"automaticChatOpenOnNavigation":true};
-        var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
-        s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-        var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
-        window.kommunicate = m; m._globals = kommunicateSettings;
-      })(document, window.kommunicate || {});
-});
-
-const logoUrl = computed(() => {
-    return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo' : 'BE-logo'}.png`;
-});
 
 const cartaUno = ref(true);
+export default {
+    setup() {
+        const { layoutConfig } = useLayout();
 
-async function cambiarCarta(){
-    this.cartaUno = !this.cartaUno;
-    return cartaUno;
+        const smoothScroll = (id) => {
+            document.querySelector(id).scrollIntoView({
+                behavior: 'smooth'
+            });
+        };
+
+        onMounted(() => {
+            (function (d, m) {
+                var kommunicateSettings = { appId: '855b06296d3f97ea04a3408a6dc3deee', popupWidget: false, automaticChatOpenOnNavigation: true };
+                var s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.async = true;
+                s.src = 'https://widget.kommunicate.io/v2/kommunicate.app';
+                var h = document.getElementsByTagName('head')[0];
+                h.appendChild(s);
+                window.kommunicate = m;
+                m._globals = kommunicateSettings;
+            })(document, window.kommunicate || {});
+        });
+
+
+async function cambiarCarta() {
+    cartaUno.value = !cartaUno.value;
 }
 
+const logoUrl = computed(() => {
+    return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo-dark' : 'BE-logo-light'}.png`;
+});
+
+        const activeIndex = ref(0);
+        const tabs = ref([
+            {
+                title: 'Habitación Simple',
+                content: `
+    Nuestra habitación 'Simple' es la elección perfecta para el viajero solitario que busca comodidad, privacidad y elegancia. Desde el momento en que entres, te sentirás envuelto en un ambiente de relajación y estilo.
+ `,
+                image: '/demo/images/landing/Simple.jpeg'
+            },
+            {
+                title: 'Habitación Dúo',
+                content: `Nuestra habitación 'Duo' es la elección perfecta para una pareja que busca comodidad, privacidad y elegancia. Desde el momento en que entren, se sentirán envueltos en un ambiente de relajación y estilo.`,
+                image: '/demo/images/landing/Duo.jpeg'
+            },
+            {
+                title: 'Habitación Doble',
+                content: `Nuestra habitación 'Doble' es la elección perfecta para grupos o familias de hasta cuatro personas que buscan comodidad, privacidad y elegancia en un ambiente relajado. Desde el momento en que ingreses, te sumergirás en una atmósfera de tranquilidad y estilo que hará que tu estadía sea inolvidable.`,
+                image: '/demo/images/landing/Doble.jpeg'
+            }
+        ]);
+        const images = ref(tabs.value.map((tab) => tab.image));
+        let interval;
+
+        const startRotation = () => {
+            interval = setInterval(() => {
+                activeIndex.value = (activeIndex.value + 1) % tabs.value.length;
+            }, 8000);
+        };
+
+        const stopRotation = () => {
+            clearInterval(interval);
+        };
+
+        const setActiveIndex = (index) => {
+            activeIndex.value = index;
+            stopRotation();
+            startRotation();
+        };
+
+        onMounted(startRotation);
+        onBeforeUnmount(stopRotation);
+
+        return { activeIndex, tabs, images, setActiveIndex, smoothScroll, cambiarCarta, cartaUno, logoUrl };
+    }
+};
 </script>
 
 <template>
@@ -40,10 +92,11 @@ async function cambiarCarta(){
         <div id="home" class="landing-wrapper overflow-hidden">
             <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3">
                 <!-- <a class="flex align-items-center" href="#"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-0 lg:mr-2" /><span class="text-900 font-medium text-2xl mr-8">Hotel BUES</span> </a> -->
-                <a class="flex align-items-center" href="/"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-2 lg:mr-4" />
+                <a class="flex align-items-center" href="/">
+                    <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-2 lg:mr-4" />
                     <!-- <span class="text-900 font-medium text-2xl" style="white-space: nowrap;">Hotel Buena Estancia</span> -->
                     <!-- <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap;">Hotel Buena Estancia</span> -->
-                    <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap;">Hotel BE</span>
+                    <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap">Hotel BE</span>
                 </a>
 
                 <a class="cursor-pointer block lg:hidden text-700 p-ripple" v-ripple v-styleclass="{ selector: '@next', enterClass: 'hidden', leaveToClass: 'hidden', hideOnOutsideClick: true }">
@@ -89,208 +142,39 @@ async function cambiarCarta(){
             </div>
 
             <!-- DIV PARA EL HOME -->
-            <div
-                id="hero"
-                class="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden"
-                style="background-image: url('/demo/images/landing/2.jpeg'); background-size: cover; background-position: center; height: 100vh; ">
+            <div id="hero" class="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden" style="background-image: url('/demo/images/landing/2.jpeg'); background-size: cover; background-position: center; height: 100vh">
                 <div class="mx-4 md:mx-8 mt-0 md:mt-4">
-                    <h1 class="texto-blanco text-6xl font-bold line-height-2 "><span class="font-light block texto-blanco">Explora el lujo auténtico </span>y el encanto en el Hotel Buena Estancia</h1>
+                    <h1 class="texto-blanco text-6xl font-bold line-height-2"><span class="font-light block texto-blanco">Explora el lujo auténtico </span>y el encanto en el Hotel Buena Estancia</h1>
                     <p class="font-normal text-2xl line-height-3 md:mt-3 texto-blanco">Donde cada hospedaje es una experiencia inolvidable.</p>
                     <Button label="Más información" class="p-button-rounded text-xl border-none mt-5 font-normal line-height-3 px-3"></Button>
                 </div>
-               
             </div>
             <!--fin del div-->
 
-            <div id="aboutus" class="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
-                <div class="grid justify-content-center">
-                    <div class="col-12 text-center mt-8 mb-4">
-                        <h2 class="text-900 font-normal mb-2">Marvelous Features</h2>
-                        <!-- <span class="text-600 text-2xl">Placerat in egestas erat...</span> -->
-                        <span class="text-600 text-2xl texto-blanco">Placerat in egestas erat...</span>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-yellow-200 mb-3" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-users text-2xl text-yellow-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-900">Easy to Use</h5>
-                                <span class="text-600">Posuere morbi leo urna molestie.</span>
-                            </div>
+            <div id="precios" class="tabview-wrapper">
+                <div class="content-wrapper">
+                    <div class="card">
+                        <div class="card-left">
+                            <transition name="fade" mode="out-in">
+                                <img :src="images[activeIndex]" :alt="'Image ' + (activeIndex + 1)" :key="images[activeIndex]" />
+                            </transition>
                         </div>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(172, 180, 223, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-cyan-200 mb-3" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-palette text-2xl text-cyan-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-900">Fresh Design</h5>
-                                <span class="text-600">Semper risus in hendrerit.</span>
-                            </div>
+                        <div class="tab-lines" @click="changeTab">
+                            <div class="tab-line" v-for="(tab, index) in tabs" :key="index" :class="{ active: activeIndex === index }" @click.stop="setActiveIndex(index)"></div>
                         </div>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg:pb-5 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(172, 180, 223, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(246, 158, 188, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-indigo-200" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-map text-2xl text-indigo-700"></i>
+                        <div class="card-right">
+                            <transition name="fade" mode="out-in">
+                                <div :key="activeIndex">
+                                    <h3>{{ tabs[activeIndex].title }}</h3>
+                                    <p>{{ tabs[activeIndex].content }}</p>
                                 </div>
-                                <h5 class="mb-2 text-900">Well Documented</h5>
-                                <span class="text-600">Non arcu risus quis varius quam quisque.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(187, 199, 205, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(145, 210, 204, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-bluegray-200 mb-3" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-id-card text-2xl text-bluegray-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-900">Responsive Layout</h5>
-                                <span class="text-600">Nulla malesuada pellentesque elit.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(187, 199, 205, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(145, 226, 237, 0.2), rgba(160, 210, 250, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-orange-200 mb-3" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-star text-2xl text-orange-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-900">Clean Code</h5>
-                                <span class="text-600">Condimentum lacinia quis vel eros.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg:pb-5 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(251, 199, 145, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(212, 162, 221, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-pink-200 mb-3" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-moon text-2xl text-pink-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-900">Dark Mode</h5>
-                                <span class="text-600">Convallis tellus id interdum velit laoreet.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(160, 210, 250, 0.2)), linear-gradient(180deg, rgba(187, 199, 205, 0.2), rgba(145, 210, 204, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-teal-200 mb-3" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-shopping-cart text-2xl text-teal-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-900">Ready to Use</h5>
-                                <span class="text-600">Mauris sit amet massa vitae.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(251, 199, 145, 0.2), rgba(160, 210, 250, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-blue-200 mb-3" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-globe text-2xl text-blue-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-900">Modern Practices</h5>
-                                <span class="text-600">Elementum nibh tellus molestie nunc non.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 md:col-12 lg:col-4 p-0 lg-4 mt-4 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(160, 210, 250, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(246, 158, 188, 0.2), rgba(212, 162, 221, 0.2))"
-                        >
-                            <div class="p-3 surface-card h-full" style="border-radius: 8px">
-                                <div class="flex align-items-center justify-content-center bg-purple-200 mb-3" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-eye text-2xl text-purple-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-900">Privacy</h5>
-                                <span class="text-600">Neque egestas congue quisque.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div
-                        class="col-12 mt-8 mb-8 p-2 md:p-8"
-                        style="border-radius: 20px; background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #efe1af 0%, #c3dcfa 100%)"
-                    >
-                        <div class="flex flex-column justify-content-center align-items-center text-center px-3 py-3 md:py-0">
-                            <h3 class="text-gray-900 mb-2">Joséphine Miller</h3>
-                            <span class="text-gray-600 text-2xl">Peak Interactive</span>
-                            <p class="text-gray-900 sm:line-height-2 md:line-height-4 text-2xl mt-4" style="max-width: 800px">
-                                “Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.”
-                            </p>
-                            <img src="/demo/images/landing/peak-logo.svg" class="mt-4" alt="Company logo" />
+                            </transition>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="highlights" class="py-4 px-4 lg:px-8 mx-0 my-6 lg:mx-8">
-                <div class="text-center">
-                    <h2 class="text-900 font-normal mb-2">Powerful Everywhere</h2>
-                    <span class="text-600 text-2xl">Amet consectetur adipiscing elit...</span>
-                </div>
-
-                <div class="grid mt-8 pb-2 md:pb-8">
-                    <div class="flex justify-content-center col-12 lg:col-6 bg-purple-100 p-0 flex-order-1 lg:flex-order-0" style="border-radius: 8px">
-                        <img src="/demo/images/landing/mockup.svg" class="w-11" alt="mockup mobile" />
-                    </div>
-
-                    <div class="col-12 lg:col-6 my-auto flex flex-column lg:align-items-end text-center lg:text-right">
-                        <div class="flex align-items-center justify-content-center bg-purple-200 align-self-center lg:align-self-end" style="width: 4.2rem; height: 4.2rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-mobile text-5xl text-purple-700"></i>
-                        </div>
-                        <h2 class="line-height-1 text-900 text-4xl font-normal">Congue Quisque Egestas</h2>
-                        <span class="text-700 text-2xl line-height-3 ml-0 md:ml-2" style="max-width: 650px"
-                            >Lectus arcu bibendum at varius vel pharetra vel turpis nunc. Eget aliquet nibh praesent tristique magna sit amet purus gravida. Sit amet mattis vulputate enim nulla aliquet.</span
-                        >
-                    </div>
-                </div>
-
-                <div class="grid my-8 pt-2 md:pt-8">
-                    <div class="col-12 lg:col-6 my-auto flex flex-column text-center lg:text-left lg:align-items-start">
-                        <div class="flex align-items-center justify-content-center bg-yellow-200 align-self-center lg:align-self-start" style="width: 4.2rem; height: 4.2rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-desktop text-5xl text-yellow-700"></i>
-                        </div>
-                        <h2 class="line-height-1 text-900 text-4xl font-normal">Celerisque Eu Ultrices</h2>
-                        <span class="text-700 text-2xl line-height-3 mr-0 md:mr-2" style="max-width: 650px"
-                            >Adipiscing commodo elit at imperdiet dui. Viverra nibh cras pulvinar mattis nunc sed blandit libero. Suspendisse in est ante in. Mauris pharetra et ultrices neque ornare aenean euismod elementum nisi.</span
-                        >
-                    </div>
-
-                    <div class="flex justify-content-end flex-order-1 sm:flex-order-2 col-12 lg:col-6 bg-yellow-100 p-0" style="border-radius: 8px">
-                        <img src="/demo/images/landing/mockup-desktop.svg" class="w-11" alt="mockup" />
-                    </div>
-                </div>
-            </div>
-
+            <!--  -->
             <div id="pricing" class="py-4 px-4 lg:px-8 my-2 md:my-4">
                 <div class="text-center">
                     <h2 class="text-900 font-normal mb-2">Matchless Pricing</h2>
@@ -402,7 +286,7 @@ async function cambiarCarta(){
                         <p class="ml-8 parrafo">
                             Estudiantes de la Lic. en Ingeniería en Desarollo de Tecnologías y Software, con una gran pasión compartida por la tecnología y una innata dedicación a la resolución de problemas de manera innovadora.
                         </p>
-                        <br>
+                        <br />
                         <h2 class="ml-8 mt-3 school">Universidad Autónoma de Chiapas</h2>
                         <div v-if="cartaUno === true">
                             <h5 class="ml-8 rol1"><span class="colored-text">Backend: </span><span class="colored-text2">(Java, PostgreSQL) </span>Lizeth Guadalupe Rodríguez Rodríguez</h5>
@@ -423,13 +307,13 @@ async function cambiarCarta(){
             </div>
 
             <div v-if="cartaUno === true" class="buttonsA">
-                <Button icon="pi pi-chevron-left" class="nextB" text rounded aria-label="Filter" size="large" disabled/>
-                <Button icon="pi pi-chevron-right" class="nextB" text rounded aria-label="Filter" size="large" @click="cambiarCarta()"/>
+                <Button icon="pi pi-chevron-left" class="nextB" text rounded aria-label="Filter" size="large" disabled />
+                <Button icon="pi pi-chevron-right" class="nextB" text rounded aria-label="Filter" size="large" @click="cambiarCarta()" />
             </div>
 
             <div v-else-if="cartaUno === false" class="buttonsA">
-                <Button icon="pi pi-chevron-left" class="nextB" text rounded aria-label="Filter" size="large"  @click="cambiarCarta()"/>
-                <Button icon="pi pi-chevron-right" class="nextB" text rounded aria-label="Filter" size="large" disabled/>
+                <Button icon="pi pi-chevron-left" class="nextB" text rounded aria-label="Filter" size="large" @click="cambiarCarta()" />
+                <Button icon="pi pi-chevron-right" class="nextB" text rounded aria-label="Filter" size="large" disabled />
             </div>
 
             <div id="contactus" class="py-4 px-4 mx-0 mt-8 lg:mx-8">
@@ -444,9 +328,7 @@ async function cambiarCarta(){
                         <div class="grid md:flex md:justify-end ml-8">
                             <div class="col-12 md:col-3 mt-4 md:mt-0 text-left w-full p-0">
                                 <h4 class="font-medium text-2xl line-height-3 mb-3 text-900">Preguntas Frecuentes</h4>
-                                <router-link to="/test" class="line-height-3 text-xl block cursor-pointer mb-2 text-700">
-                                    <i class="pi pi-question-circle"></i> FAQ
-                                </router-link>
+                                <router-link to="/test" class="line-height-3 text-xl block cursor-pointer mb-2 text-700"> <i class="pi pi-question-circle"></i> FAQ </router-link>
                             </div>
                         </div>
                     </div>
@@ -457,131 +339,161 @@ async function cambiarCarta(){
 </template>
 
 <style scoped>
-    .somos {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .heading {
-        font-size: 4em;
-        color: #2D2E8B;
-        font-weight: bold;
-        font-family: 'Poppins', sans-serif;
-    }
-    .rectangle {
-        width: 200px; 
-        height: 10px;
-        background-color: #FF7F32;
-        margin-top: 10px; 
-    }
+.somos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.heading {
+    font-size: 4em;
+    color: #2d2e8b;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+.rectangle {
+    width: 200px;
+    height: 10px;
+    background-color: #ff7f32;
+    margin-top: 10px;
+}
 
-    .parrafo {
-        font-size: 15px;
-        color: #181717;
-        font-family: 'Poppins', sans-serif;
-        width: 50rem;
-        margin-top: 30px; 
-    }
+.parrafo {
+    font-size: 15px;
+    color: #181717;
+    font-family: 'Poppins', sans-serif;
+    width: 50rem;
+    margin-top: 30px;
+}
 
-    .school {
-        font-size: 1.5em;
-        color: #2D2E8B;
-        font-weight: bold;
-        font-family: 'Poppins', sans-serif;
-    }
+.school {
+    font-size: 1.5em;
+    color: #2d2e8b;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
 
-    .rol1 {
-        font-size: 15px;
-        color: #181717;
-        font-family: 'Poppins', sans-serif;
-        width: 50rem;
-        margin-top: 20px; 
-    }
+.rol1 {
+    font-size: 15px;
+    color: #181717;
+    font-family: 'Poppins', sans-serif;
+    width: 50rem;
+    margin-top: 20px;
+}
 
-    .front {
-        margin-top: 0px;
-        margin-bottom: 100px;
-    }
-    .colored-text {
-        color: #d16724;
-        font-weight: bold;
-    }
-    .colored-text2 {
-        color: #2D2E8B;
-        font-weight: bold;
-    }
+.front {
+    margin-top: 0px;
+    margin-bottom: 100px;
+}
+.colored-text {
+    color: #d16724;
+    font-weight: bold;
+}
+.colored-text2 {
+    color: #2d2e8b;
+    font-weight: bold;
+}
 
-    .fondo-img {
-        position: absolute;
-        margin-left: 34%;
-        margin-top: -1.5%;
-    }
-    .buttonsA {
-        position: absolute;
-        margin-left: 50%;
-        margin-top: -4%;
-        transition: opacity 0.5s;
-    }
-    .img2 {
-        margin-top: -7.5%;
-    }
+.fondo-img {
+    position: absolute;
+    margin-left: 34%;
+    margin-top: -1.5%;
+}
+.buttonsA {
+    position: absolute;
+    margin-left: 50%;
+    margin-top: -4%;
+    transition: opacity 0.5s;
+}
+.img2 {
+    margin-top: -7.5%;
+}
 </style>
 
-<!-- <style scoped>
-#hero {
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #eeefaf 0%, #c3e3fa 100%);
-    height: 700px;
-    overflow: hidden;
+<style scoped>
+h5 {
+    color: white;
 }
 
-@media screen and (min-width: 768px) {
-    #hero {
-        -webkit-clip-path: ellipse(150% 87% at 93% 13%);
-        clip-path: ellipse(150% 87% at 93% 13%);
-        height: 530px;
-    }
+.texto-blanco {
+    color: white;
 }
+</style>
 
-@media screen and (min-width: 1300px) {
-    #hero > img {
-        position: absolute;
-    }
-
-    #hero > div > p {
-        max-width: 450px;
-    }
-}
-
-@media screen and (max-width: 1300px) {
-    #hero {
-        height: 600px;
-    }
-
-    #hero > img {
-        position: static;
-        transform: scale(1);
-        margin-left: auto;
-    }
-
-    #hero > div {
-        width: 100%;
-    }
-
-    #hero > div > p {
-        width: 100%;
-        max-width: 100%;
-    }
-}
-</style> -->
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    h5 {
-        color: white;
-    }
+.tabview-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-    .texto-blanco {
-        color: white;
-    }
+.content-wrapper {
+    width: 80vw;
+    max-width: 1200px;
+    margin: auto;
+    font-family: 'Poppins', sans-serif;
+}
 
+.card {
+    display: flex;
+    position: relative;
+    width: 100%;
+    max-height: 1200px;
+}
+
+.card-left {
+    width: 50%;
+    overflow: hidden;
+    margin-left: 0px;
+}
+
+.card-left img {
+    width: 100%;
+    object-fit: cover;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.tab-lines {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.tab-line {
+    flex-grow: 1;
+    width: 4px;
+    background: #ccc;
+}
+
+.tab-line.active {
+    background: #2d2e8b;
+}
+
+.card-right {
+    width: 50%;
+    padding: 60px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
 </style>
