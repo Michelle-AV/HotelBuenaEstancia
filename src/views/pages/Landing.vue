@@ -1,12 +1,9 @@
-<script >
+<script>
 import { useLayout } from '@/layout/composables/layout';
 import { computed, onMounted, ref, onBeforeUnmount } from 'vue';
 import AppConfig from '@/layout/AppConfig.vue';
 import Button from 'primevue/button';
 
-
-
-const cartaUno = ref(true);
 export default {
     setup() {
         const { layoutConfig } = useLayout();
@@ -31,14 +28,15 @@ export default {
             })(document, window.kommunicate || {});
         });
 
+        const cartaUno = ref(true);
 
-async function cambiarCarta() {
-    cartaUno.value = !cartaUno.value;
-}
+        async function cambiarCarta() {
+            cartaUno.value = !cartaUno.value;
+        }
 
-const logoUrl = computed(() => {
-    return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo-dark' : 'BE-logo-light'}.png`;
-});
+        const logoUrl = computed(() => {
+            return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo-dark' : 'BE-logo-light'}.png`;
+        });
 
         const activeIndex = ref(0);
         const tabs = ref([
@@ -82,7 +80,7 @@ const logoUrl = computed(() => {
         onMounted(startRotation);
         onBeforeUnmount(stopRotation);
 
-        return { activeIndex, tabs, images, setActiveIndex, smoothScroll, cambiarCarta, cartaUno, logoUrl };
+        return { activeIndex, tabs, images, setActiveIndex, smoothScroll, cambiarCarta, cartaUno, logoUrl, useLayout};
     }
 };
 </script>
@@ -116,8 +114,8 @@ const logoUrl = computed(() => {
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#precios')" class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 p-ripple" v-ripple>
-                                <span>Precios</span>
+                            <a @click="smoothScroll('#Habitaciones')" class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 p-ripple" v-ripple>
+                                <span>Habitaciones</span>
                             </a>
                         </li>
                         <li>
@@ -151,7 +149,7 @@ const logoUrl = computed(() => {
             </div>
             <!--fin del div-->
 
-            <div id="precios" class="tabview-wrapper">
+            <div id="Habitaciones" class="tabview-wrapper">
                 <div class="content-wrapper">
                     <div class="card">
                         <div class="card-left">
@@ -175,107 +173,44 @@ const logoUrl = computed(() => {
             </div>
 
             <!--  -->
-            <div id="pricing" class="py-4 px-4 lg:px-8 my-2 md:my-4">
-                <div class="text-center">
-                    <h2 class="text-900 font-normal mb-2">Matchless Pricing</h2>
-                    <span class="text-600 text-2xl">Amet consectetur adipiscing elit...</span>
-                </div>
 
-                <div class="grid justify-content-between mt-8 md:mt-0">
-                    <div class="col-12 lg:col-4 p-0 md:p-3">
-                        <div class="p-3 flex flex-column border-200 pricing-card cursor-pointer border-2 hover:border-primary transition-duration-300 transition-all" style="border-radius: 10px">
-                            <h3 class="text-900 text-center my-5">Free</h3>
-                            <img src="/demo/images/landing/free.svg" class="w-10 h-10 mx-auto" alt="free" />
-                            <div class="my-5 text-center">
-                                <span class="text-5xl font-bold mr-2 text-900">$0</span>
-                                <span class="text-600">per month</span>
-                                <Button label="Get Started" class="block mx-auto mt-4 p-button-rounded border-none ml-3 font-light line-height-2 bg-blue-500 text-white"></Button>
-                            </div>
-                            <Divider class="w-full bg-surface-200"></Divider>
-                            <ul class="my-5 list-none p-0 flex text-900 flex-column">
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Responsive Layout</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Unlimited Push Messages</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">50 Support Ticket</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Free Shipping</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+            <div id="servicios" class="container">
+                <h1 style="margin-bottom: -200px;" class="text-6xl font-bold line-height-2">Conoce nuestros servicios</h1>
 
-                    <div class="col-12 lg:col-4 p-0 md:p-3 mt-4 md:mt-0">
-                        <div class="p-3 flex flex-column border-200 pricing-card cursor-pointer border-2 hover:border-primary transition-duration-300 transition-all" style="border-radius: 10px">
-                            <h3 class="text-900 text-center my-5">Startup</h3>
-                            <img src="/demo/images/landing/startup.svg" class="w-10 h-10 mx-auto" alt="startup" />
-                            <div class="my-5 text-center">
-                                <span class="text-5xl font-bold mr-2 text-900">$1</span>
-                                <span class="text-600">per month</span>
-                                <Button label="Try Free" class="block mx-auto mt-4 p-button-rounded border-none ml-3 font-light line-height-2 bg-blue-500 text-white"></Button>
-                            </div>
-                            <Divider class="w-full bg-surface-200"></Divider>
-                            <ul class="my-5 list-none p-0 flex text-900 flex-column">
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Responsive Layout</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Unlimited Push Messages</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">50 Support Ticket</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Free Shipping</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="card__container">
+                    <article class="card__article">
+                        <img src="/demo/images/landing/Lavanderia.jpeg" alt="image" class="card__img" />
 
-                    <div class="col-12 lg:col-4 p-0 md:p-3 mt-4 md:mt-0">
-                        <div class="p-3 flex flex-column border-200 pricing-card cursor-pointer border-2 hover:border-primary transition-duration-300 transition-all" style="border-radius: 10px">
-                            <h3 class="text-900 text-center my-5">Enterprise</h3>
-                            <img src="/demo/images/landing/enterprise.svg" class="w-10 h-10 mx-auto" alt="enterprise" />
-                            <div class="my-5 text-center">
-                                <span class="text-5xl font-bold mr-2 text-900">$999</span>
-                                <span class="text-600">per month</span>
-                                <Button label="Get a Quote" class="block mx-auto mt-4 p-button-rounded border-none ml-3 font-light line-height-2 bg-blue-500 text-white"></Button>
-                            </div>
-                            <Divider class="w-full bg-surface-200"></Divider>
-                            <ul class="my-5 list-none p-0 flex text-900 flex-column">
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Responsive Layout</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Unlimited Push Messages</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">50 Support Ticket</span>
-                                </li>
-                                <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl line-height-3">Free Shipping</span>
-                                </li>
-                            </ul>
+                        <div class="card__data">
+                            <span class="card__description">Eficiente, cómodo, rápido, impecable.</span>
+                            <h2 class="card__title">Lavanderia</h2>
+                            <a href="#" class="card__button">8:00 a.m. - 8:00 p.m.</a>
                         </div>
-                    </div>
+                    </article>
+
+                    <article class="card__article">
+                        <img src="/demo/images/landing/Buffet.jpeg" alt="image" class="card__img" />
+
+                        <div class="card__data">
+                            <span class="card__description">Variado, delicioso, fresco, conveniente.</span>
+                            <h2 class="card__title">Buffet</h2>
+                            <a href="#" class="card__button">7:00 a.m. - 9:00 p.m.</a>
+                        </div>
+                    </article>
+
+                    <article class="card__article">
+                        <img src="/demo/images/landing/Gimnasio.jpeg" alt="image" class="card__img" />
+
+                        <div class="card__data">
+                            <span class="card__description">Moderno, equipado, accesible.</span>
+                            <h2 class="card__title">Gimnasio</h2>
+                            <a href="#" class="card__button">6:00 a.m. - 10:00 p.m.</a>
+                        </div>
+                    </article>
                 </div>
             </div>
+
+            <!--  -->
 
             <div id="somos" class="py-4 px-4 mx-0 mt-8 lg:mx-8 somos">
                 <div class="card col-11 grid my-8 pt-2 md:pt-8">
@@ -418,8 +353,7 @@ h5 {
     color: white;
 }
 </style>
-
-
+<!-- Style tab-habitaciones -->
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -427,12 +361,12 @@ h5 {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 10%;
 }
 
 .content-wrapper {
-    width: 80vw;
-    max-width: 1200px;
+    width: 100vw;
+    max-width: 1600px;
     margin: auto;
     font-family: 'Poppins', sans-serif;
 }
@@ -495,5 +429,196 @@ h5 {
 .fade-enter,
 .fade-leave-to {
     opacity: 0;
+}
+</style>
+<!-- Style servicios -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+:root {
+    --first-color: hsl(82, 60%, 28%);
+    --title-color: hsl(0, 0%, 15%);
+    --text-color: hsl(0, 0%, 35%);
+    --body-color: hsl(0, 0%, 95%);
+    --container-color: hsl(0, 0%, 100%);
+    --body-font: 'Poppins', sans-serif;
+    --h2-font-size: 1.25rem;
+    --small-font-size: 0.813rem;
+}
+
+@media screen and (min-width: 1120px) {
+    :root {
+        --h2-font-size: 1.5rem;
+        --small-font-size: 0.875rem;
+    }
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: var(--body-font);
+    background-color: var(--body-color);
+    color: var(--text-color);
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.container {
+    display: grid;
+    place-items: center;
+    margin-inline: 1.5rem;
+    padding-block: 5rem;
+}
+
+.card__container {
+    display: grid;
+    row-gap: 3.5rem;
+}
+
+.card__article {
+    position: relative;
+    overflow: hidden;
+}
+
+.card__img {
+    width: 328px;
+    border-radius: 1.5rem;
+}
+
+.card__data {
+    width: 280px;
+    background-color: var(--container-color);
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.15);
+    border-radius: 1rem;
+    position: absolute;
+    bottom: -9rem;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    opacity: 0;
+    transition: opacity 1s 1s;
+}
+
+.card__description {
+    display: block;
+    font-size: var(--small-font-size);
+    margin-bottom: 0.25rem;
+}
+
+.card__title {
+    font-size: var(--h2-font-size);
+    font-weight: 500;
+    color: var(--title-color);
+    margin-bottom: 0.75rem;
+}
+
+.card__button {
+    text-decoration: none;
+    font-size: var(--small-font-size);
+    font-weight: 500;
+    color: var(--first-color);
+}
+
+.card__button:hover {
+    text-decoration: underline;
+}
+
+.card__article:hover .card__data {
+    animation: show-data 1s forwards;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.card__article:hover {
+    animation: remove-overflow 2s forwards;
+}
+
+.card__article:not(:hover) {
+    animation: show-overflow 2s forwards;
+}
+
+.card__article:not(:hover) .card__data {
+    animation: remove-data 1s forwards;
+}
+
+@keyframes show-data {
+    50% {
+        transform: translateY(-10rem);
+    }
+    100% {
+        transform: translateY(-7rem);
+    }
+}
+
+@keyframes remove-overflow {
+    to {
+        overflow: initial;
+    }
+}
+
+@keyframes remove-data {
+    0% {
+        transform: translateY(-7rem);
+    }
+    50% {
+        transform: translateY(-10rem);
+    }
+    100% {
+        transform: translateY(0.5rem);
+    }
+}
+
+@keyframes show-overflow {
+    0% {
+        overflow: initial;
+        pointer-events: none;
+    }
+    50% {
+        overflow: hidden;
+    }
+}
+
+@media screen and (max-width: 340px) {
+    .container {
+        margin-inline: 1rem;
+    }
+
+    .card__data {
+        width: 250px;
+        padding: 1rem;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .card__container {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 1.5rem;
+    }
+}
+
+@media screen and (min-width: 1120px) {
+    .container {
+        height: 100vh;
+    }
+
+    .card__container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .card__img {
+        width: 348px;
+    }
+    .card__data {
+        width: 316px;
+        padding-inline: 2.5rem;
+    }
 }
 </style>
