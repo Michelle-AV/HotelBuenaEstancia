@@ -1,4 +1,7 @@
 <template>
+    <a href="/" class="back-button">
+            <i class="pi pi-angle-left"></i>
+        </a>
     <div class="flex flex-column align-items-center justify-content-center">
         <div class="col-10 mx-auto semi-circle-container mt-5">
             <div class="card card-content">
@@ -20,7 +23,7 @@
                         <div v-if="currentQuestion === 1" class="response card">
                             <ul>
                                 <h6>¡Explora las habitaciones disponibles para reservar el día de hoy! Cada una ha sido preparada con esmero para asegurar una experiencia de descanso y relajación inigualable.</h6>
-                                <li v-for="(message, index) in messages" :key="index">Alrededor de {{ message.cantidad }} habitacion(es) de tipo {{ message.tipohabitacion }} al momento de realizar esta consulta.</li>
+                                <li v-for="(message, index) in messages" :key="index">Alrededor de {{ message.available_rooms }} habitacion(es) de tipo {{ message.desc_hab }} al momento de realizar esta consulta.</li>
                             </ul>
                         </div>
                     </transition>
@@ -234,6 +237,14 @@ h5 {
   opacity: 0;
 }
 
-
+.back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px; 
+        font-size: 1.5em;
+        color: #FFF;
+        text-decoration: none;
+        z-index: 10; 
+    }
 </style>
   
