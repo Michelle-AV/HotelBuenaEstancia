@@ -1,10 +1,38 @@
-<script>
+  <script>
 import { useLayout } from '@/layout/composables/layout';
 import { computed, onMounted, ref, onBeforeUnmount } from 'vue';
 import AppConfig from '@/layout/AppConfig.vue';
 import Button from 'primevue/button';
 
+import icono1 from '/demo/images/landing/star.png';
+import icono2 from '/demo/images/landing/star-fill.png';
+import icono3 from '/demo/images/landing/star.png';
+
 export default {
+    data() {
+        return {
+            componentsData: [
+                { id: 1, title: 'Buena elección de hotel', text: 'Nuestro hotel ofrece una experiencia inigualable gracias a su excepcional ubicación.', circleColor: '#FDB62F', backgroundColor: '#FFFFFF', icon: icono1 },
+                {
+                    id: 2,
+                    title: 'Servicio de clase mundial',
+                    text: 'Proporcionar un servicio al cliente de primera clase, asegurando que cada estancia sea cómoda, relajante y memorable.',
+                    circleColor: '#FFFFFF',
+                    backgroundColor: '#FDB62F',
+                    icon: icono2
+                },
+                {
+                    id: 3,
+                    title: 'El mejor precio garantizado',
+                    text: 'Tarifas competitivas sin comprometer la calidad, asegurando que los viajeros disfruten de un alojamiento superior y comodidades de primera a un precio accesible.',
+                    circleColor: '#FDB62F',
+                    backgroundColor: '#FFFFFF',
+                    icon: icono3
+                }
+            ]
+        };
+    },
+
     setup() {
         const { layoutConfig } = useLayout();
 
@@ -80,7 +108,7 @@ export default {
         onMounted(startRotation);
         onBeforeUnmount(stopRotation);
 
-        return { activeIndex, tabs, images, setActiveIndex, smoothScroll, cambiarCarta, cartaUno, logoUrl, useLayout};
+        return { activeIndex, tabs, images, setActiveIndex, smoothScroll, cambiarCarta, cartaUno, logoUrl, useLayout };
     }
 };
 </script>
@@ -88,6 +116,7 @@ export default {
 <template>
     <div class="surface-0 flex justify-content-center">
         <div id="home" class="landing-wrapper overflow-hidden">
+            <!-- TopBar -->
             <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3">
                 <!-- <a class="flex align-items-center" href="#"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-0 lg:mr-2" /><span class="text-900 font-medium text-2xl mr-8">Hotel BUES</span> </a> -->
                 <a class="flex align-items-center" href="/">
@@ -138,8 +167,9 @@ export default {
                     </div>
                 </div>
             </div>
+            <!-- TopBar Close -->
 
-            <!-- DIV PARA EL HOME -->
+            <!-- Home -->
             <div id="hero" class="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden" style="background-image: url('/demo/images/landing/2.jpeg'); background-size: cover; background-position: center; height: 100vh">
                 <div class="mx-4 md:mx-8 mt-0 md:mt-4">
                     <h1 class="texto-blanco text-6xl font-bold line-height-2"><span class="font-light block texto-blanco">Explora el lujo auténtico </span>y el encanto en el Hotel Buena Estancia</h1>
@@ -147,8 +177,9 @@ export default {
                     <Button label="Más información" class="p-button-rounded text-xl border-none mt-5 font-normal line-height-3 px-3"></Button>
                 </div>
             </div>
-            <!--fin del div-->
+            <!--Home Close-->
 
+            <!-- HabitacionesComponent -->
             <div id="Habitaciones" class="tabview-wrapper">
                 <div class="content-wrapper">
                     <div class="card">
@@ -172,10 +203,11 @@ export default {
                 </div>
             </div>
 
-            <!--  -->
+            <!-- HabitacionesComponent Close -->
 
+            <!-- ServiciosComponent -->
             <div id="servicios" class="container">
-                <h1 style="margin-bottom: -200px;" class="text-6xl font-bold line-height-2">Conoce nuestros servicios</h1>
+                <h1 style="margin-bottom: -200px" class="text-6xl font-bold line-height-2">Conoce nuestros servicios</h1>
 
                 <div class="card__container">
                     <article class="card__article">
@@ -209,9 +241,25 @@ export default {
                     </article>
                 </div>
             </div>
+            <!-- ServiciosComponent Close  -->
 
             <!--  -->
+            <div id="hero" class="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden" style="background-image: url('/demo/images/landing/exterior.jpeg'); background-size: cover; background-position: center; height: 100vh">
+                <div class="components-container">
+                    <div class="component-item" v-for="component in componentsData" :key="component.id" :style="{ backgroundColor: component.backgroundColor }">
+                        <div class="circle" :style="{ backgroundColor: component.circleColor, boxShadow: '0 2px 4px rgba(0,0,0,0.25)' }">
+                            <img class="icon-image" :src="component.icon" alt="Icon" />
+                        </div>
+                        <div class="content">
+                            <h1>{{ component.title }}</h1>
+                            <p>{{ component.text }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
 
+            <!-- AboutUs -->
             <div id="somos" class="py-4 px-4 mx-0 mt-8 lg:mx-8 somos">
                 <div class="card col-11 grid my-8 pt-2 md:pt-8">
                     <div class="col-12 lg:col-6 my-auto flex flex-column text-center lg:text-left lg:align-items-start">
@@ -228,8 +276,8 @@ export default {
                             <h5 class="ml-8 rol1 front"><span class="colored-text">Frontend: </span><span class="colored-text2">(Vue, Node.js) </span>José María Padilla Fernández</h5>
                         </div>
                         <div v-else-if="cartaUno === false">
-                            <h5 class="ml-8 rol1"><span class="colored-text">Sockets Manager: </span><span class="colored-text2">(Sockets.io, Express.js) </span>Irma Michelle Ayala Vázquez</h5>
-                            <h5 class="ml-8 rol1"><span class="colored-text">Sockets Manager: </span><span class="colored-text2">(Sockets.io, Express.js) </span>Pedro Octavio Culebro Prado</h5>
+                            <h5 class="ml-8 rol1"><span class="colored-text">Server Manager: </span><span class="colored-text2">(Sockets.io, Express.js) </span>Irma Michelle Ayala Vázquez</h5>
+                            <h5 class="ml-8 rol1"><span class="colored-text">Server Manager: </span><span class="colored-text2">(Sockets.io, Express.js) </span>Pedro Octavio Culebro Prado</h5>
                             <h5 class="ml-8 rol1 front"><span class="colored-text">IA's Manager: </span><span class="colored-text2">(Kommunicate's Model) </span>Braulio Coutiño Morales</h5>
                         </div>
                     </div>
@@ -250,7 +298,7 @@ export default {
                 <Button icon="pi pi-chevron-left" class="nextB" text rounded aria-label="Filter" size="large" @click="cambiarCarta()" />
                 <Button icon="pi pi-chevron-right" class="nextB" text rounded aria-label="Filter" size="large" disabled />
             </div>
-
+            <!-- AboutUs Close -->
             <div id="contactus" class="py-4 px-4 mx-0 mt-8 lg:mx-8">
                 <div class="grid justify-content-between">
                     <div class="col-12 md:col-2" style="margin-top: -1.5rem">
@@ -436,7 +484,7 @@ h5 {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
 
 :root {
-    --first-color: hsl(82, 60%, 28%);
+    --first-color: #ff7f32;
     --title-color: hsl(0, 0%, 15%);
     --text-color: hsl(0, 0%, 35%);
     --body-color: hsl(0, 0%, 95%);
@@ -620,5 +668,64 @@ img {
         width: 316px;
         padding-inline: 2.5rem;
     }
+}
+</style>
+<!-- Style StarComponent -->
+<style scoped>
+.components-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.component-item {
+    width: 27vw;
+    height: flex;
+    border-radius: 10px;
+    overflow: visible;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 50px;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    padding-bottom: 20px;
+}
+
+.circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -25px;
+    z-index: 1;
+}
+
+.icon-image {
+    max-width: 40%;
+}
+
+.content {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    z-index: 0;
+}
+
+h1 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1em;
 }
 </style>
