@@ -1,7 +1,8 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import AppConfig from '@/layout/AppConfig.vue';
+import Button from 'primevue/button';
 
 const { layoutConfig } = useLayout();
 
@@ -25,6 +26,13 @@ const logoUrl = computed(() => {
     return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo' : 'BE-logo'}.png`;
 });
 
+const cartaUno = ref(true);
+
+async function cambiarCarta(){
+    this.cartaUno = !this.cartaUno;
+    return cartaUno;
+}
+
 </script>
 
 <template>
@@ -35,7 +43,7 @@ const logoUrl = computed(() => {
                 <a class="flex align-items-center" href="/"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-2 lg:mr-4" />
                     <!-- <span class="text-900 font-medium text-2xl" style="white-space: nowrap;">Hotel Buena Estancia</span> -->
                     <!-- <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap;">Hotel Buena Estancia</span> -->
-                    <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap;">Hotel BUES</span>
+                    <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap;">Hotel BE</span>
                 </a>
 
                 <a class="cursor-pointer block lg:hidden text-700 p-ripple" v-ripple v-styleclass="{ selector: '@next', enterClass: 'hidden', leaveToClass: 'hidden', hideOnOutsideClick: true }">
@@ -50,7 +58,7 @@ const logoUrl = computed(() => {
                         </li>
 
                         <li>
-                            <a @click="smoothScroll('#aboutus')" class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 p-ripple" v-ripple>
+                            <a @click="smoothScroll('#somos')" class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 p-ripple" v-ripple>
                                 <span>Sobre nosotros</span>
                             </a>
                         </li>
@@ -72,7 +80,7 @@ const logoUrl = computed(() => {
                     </ul>
                     <div class="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
                         <!-- <Button label="Login" class="p-button-text p-button-rounded border-none font-light line-height-2 text-blue-500"></Button> -->
-                        <router-link to="/auth/login" class="p-button p-button-text p-button-rounded border-none font-light line-height-2 text-blue-500">
+                        <router-link to="/auth/login" class="p-button p-button-text p-button-rounded border-none font-light line-height-2">
                             <strong>Login</strong>
                         </router-link>
                         <!-- <Button label="Register" class="p-button-rounded border-none ml-5 font-light text-white line-height-2 bg-blue-500"></Button> -->
@@ -84,11 +92,11 @@ const logoUrl = computed(() => {
             <div
                 id="hero"
                 class="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden"
-                style="background-image: url('/demo/images/landing/fondo1.jpeg'); background-size: cover; background-position: center; height: 100vh; ">
+                style="background-image: url('/demo/images/landing/2.jpeg'); background-size: cover; background-position: center; height: 100vh; ">
                 <div class="mx-4 md:mx-8 mt-0 md:mt-4">
                     <h1 class="texto-blanco text-6xl font-bold line-height-2 "><span class="font-light block texto-blanco">Explora el lujo auténtico </span>y el encanto en el Hotel Buena Estancia</h1>
                     <p class="font-normal text-2xl line-height-3 md:mt-3 texto-blanco">Donde cada hospedaje es una experiencia inolvidable.</p>
-                    <Button label="Más información" class="p-button-rounded text-xl border-none mt-5 bg-white font-normal line-height-3 px-3"></Button>
+                    <Button label="Más información" class="p-button-rounded text-xl border-none mt-5 font-normal line-height-3 px-3"></Button>
                 </div>
                
             </div>
@@ -385,12 +393,51 @@ const logoUrl = computed(() => {
                 </div>
             </div>
 
+            <div id="somos" class="py-4 px-4 mx-0 mt-8 lg:mx-8 somos">
+                <div class="card col-11 grid my-8 pt-2 md:pt-8">
+                    <div class="col-12 lg:col-6 my-auto flex flex-column text-center lg:text-left lg:align-items-start">
+                        <h1 class="ml-7 mt-5 heading">¿Quíenes somos?</h1>
+                        <div class="ml-8 rectangle"></div>
+
+                        <p class="ml-8 parrafo">
+                            Estudiantes de la Lic. en Ingeniería en Desarollo de Tecnologías y Software, con una gran pasión compartida por la tecnología y una innata dedicación a la resolución de problemas de manera innovadora.
+                        </p>
+                        <br>
+                        <h2 class="ml-8 mt-3 school">Universidad Autónoma de Chiapas</h2>
+                        <div v-if="cartaUno === true">
+                            <h5 class="ml-8 rol1"><span class="colored-text">Backend: </span><span class="colored-text2">(Java, PostgreSQL) </span>Lizeth Guadalupe Rodríguez Rodríguez</h5>
+                            <h5 class="ml-8 rol1 front"><span class="colored-text">Frontend: </span><span class="colored-text2">(Vue, Node.js) </span>José María Padilla Fernández</h5>
+                        </div>
+                        <div v-else-if="cartaUno === false">
+                            <h5 class="ml-8 rol1"><span class="colored-text">Sockets Manager: </span><span class="colored-text2">(Sockets.io, Express.js) </span>Irma Michelle Ayala Vázquez</h5>
+                            <h5 class="ml-8 rol1"><span class="colored-text">Sockets Manager: </span><span class="colored-text2">(Sockets.io, Express.js) </span>Pedro Octavio Culebro Prado</h5>
+                            <h5 class="ml-8 rol1 front"><span class="colored-text">IA's Manager: </span><span class="colored-text2">(Kommunicate's Model) </span>Braulio Coutiño Morales</h5>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-content-end flex-order-1 sm:flex-order-2 col-12 lg:col-6 p-0 fondo-img">
+                        <img v-if="cartaUno === true" src="/demo/images/landing/aboutus1.2.png" class="w-9" alt="mockup" />
+                        <img v-else-if="cartaUno === false" src="/demo/images/landing/aboutus2.png" class="w-7 img2" alt="mockup" />
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="cartaUno === true" class="buttonsA">
+                <Button icon="pi pi-chevron-left" class="nextB" text rounded aria-label="Filter" size="large" disabled/>
+                <Button icon="pi pi-chevron-right" class="nextB" text rounded aria-label="Filter" size="large" @click="cambiarCarta()"/>
+            </div>
+
+            <div v-else-if="cartaUno === false" class="buttonsA">
+                <Button icon="pi pi-chevron-left" class="nextB" text rounded aria-label="Filter" size="large"  @click="cambiarCarta()"/>
+                <Button icon="pi pi-chevron-right" class="nextB" text rounded aria-label="Filter" size="large" disabled/>
+            </div>
+
             <div id="contactus" class="py-4 px-4 mx-0 mt-8 lg:mx-8">
                 <div class="grid justify-content-between">
                     <div class="col-12 md:col-2" style="margin-top: -1.5rem">
                         <a @click="smoothScroll('#home')" class="flex flex-wrap align-items-center justify-content-center md:justify-content-start md:mb-0 mb-3 cursor-pointer">
-                            <img :src="logoUrl" alt="footer sections" width="50" height="50" class="mr-2" />
-                            <h4 class="font-medium text-3xl text-900">Hotel BUES</h4>
+                            <img :src="logoUrl" alt="footer sections" width="65" height="40" class="mr-2" />
+                            <h4 class="font-medium text-3xl text-900">Hotel BE</h4>
                         </a>
                     </div>
                     <div class="col-12 md:col-10 lg:col-7">
@@ -408,6 +455,77 @@ const logoUrl = computed(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+    .somos {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .heading {
+        font-size: 4em;
+        color: #2D2E8B;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+    }
+    .rectangle {
+        width: 200px; 
+        height: 10px;
+        background-color: #FF7F32;
+        margin-top: 10px; 
+    }
+
+    .parrafo {
+        font-size: 15px;
+        color: #181717;
+        font-family: 'Poppins', sans-serif;
+        width: 50rem;
+        margin-top: 30px; 
+    }
+
+    .school {
+        font-size: 1.5em;
+        color: #2D2E8B;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .rol1 {
+        font-size: 15px;
+        color: #181717;
+        font-family: 'Poppins', sans-serif;
+        width: 50rem;
+        margin-top: 20px; 
+    }
+
+    .front {
+        margin-top: 0px;
+        margin-bottom: 100px;
+    }
+    .colored-text {
+        color: #d16724;
+        font-weight: bold;
+    }
+    .colored-text2 {
+        color: #2D2E8B;
+        font-weight: bold;
+    }
+
+    .fondo-img {
+        position: absolute;
+        margin-left: 34%;
+        margin-top: -1.5%;
+    }
+    .buttonsA {
+        position: absolute;
+        margin-left: 50%;
+        margin-top: -4%;
+        transition: opacity 0.5s;
+    }
+    .img2 {
+        margin-top: -7.5%;
+    }
+</style>
 
 <!-- <style scoped>
 #hero {
