@@ -63,7 +63,7 @@ export default {
         }
 
         const logoUrl = computed(() => {
-            return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo-dark' : 'BE-logo-light'}.png`;
+            return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo1' : 'BE-logo'}.svg`;
         });
 
         const activeIndex = ref(0);
@@ -73,16 +73,20 @@ export default {
                 content: `
     Nuestra habitación 'Simple' es la elección perfecta para el viajero solitario que busca comodidad, privacidad y elegancia. Desde el momento en que entres, te sentirás envuelto en un ambiente de relajación y estilo.
  `,
+                price: '$500',
                 image: '/demo/images/landing/Simple.jpeg'
             },
             {
                 title: 'Habitación Dúo',
                 content: `Nuestra habitación 'Duo' es la elección perfecta para una pareja que busca comodidad, privacidad y elegancia. Desde el momento en que entren, se sentirán envueltos en un ambiente de relajación y estilo.`,
+                price: '$750',
                 image: '/demo/images/landing/Duo.jpeg'
             },
             {
                 title: 'Habitación Doble',
                 content: `Nuestra habitación 'Doble' es la elección perfecta para grupos o familias de hasta cuatro personas que buscan comodidad, privacidad y elegancia en un ambiente relajado. Desde el momento en que ingreses, te sumergirás en una atmósfera de tranquilidad y estilo que hará que tu estadía sea inolvidable.`,
+                price: '$1000',
+
                 image: '/demo/images/landing/Doble.jpeg'
             }
         ]);
@@ -196,6 +200,7 @@ export default {
                                 <div :key="activeIndex">
                                     <h3>{{ tabs[activeIndex].title }}</h3>
                                     <p>{{ tabs[activeIndex].content }}</p>
+                                    <h6>{{ tabs[activeIndex].price }}</h6>
                                 </div>
                             </transition>
                         </div>
@@ -207,7 +212,7 @@ export default {
 
             <!-- ServiciosComponent -->
             <div id="servicios" class="container">
-                <h1 style="margin-bottom: -200px" class="text-6xl font-bold line-height-2">Conoce nuestros servicios</h1>
+                <h1 style="margin-bottom: -200px" class="text-6xl title-font line-height-2">Conoce nuestros servicios</h1>
 
                 <div class="card__container">
                     <article class="card__article">
@@ -482,7 +487,7 @@ h5 {
 <!-- Style servicios -->
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Edu+TAS+Beginner&family=Raleway:ital,wght@0,100;1,300&display=swap');
 :root {
     --first-color: #ff7f32;
     --title-color: hsl(0, 0%, 15%);
@@ -499,6 +504,10 @@ h5 {
         --h2-font-size: 1.5rem;
         --small-font-size: 0.875rem;
     }
+}
+
+.title-font{
+    font-family: 'Poppins', sans-serif;
 }
 
 * {
