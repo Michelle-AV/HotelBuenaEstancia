@@ -1,5 +1,301 @@
+<script>
+import { ref, computed } from 'vue';
+import Calendar from 'primevue/calendar';
+import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import axios from 'axios';
+
+import { DIRECC_IP } from '@/service/direccionIP.js'
+
+import { useToast } from 'primevue/usetoast';
+
+export default {
+    components: {
+        InputText,
+        Button,
+        Calendar,
+        InputNumber,
+        Dialog
+    },
+    setup() {
+        const toast = useToast();
+
+        const telefono = ref('');
+        const nombre = ref('');
+        const appat = ref('');
+        const apmat = ref('');
+        const correo = ref('');
+        const direccion = ref('');
+        const rfc = ref('');
+        const telefonon = ref(null);
+        const clienteEncontrado = ref(false);
+        const cliente = ref('');
+        const fechaReserva = ref(null);
+        const numHabitaciones = ref(0);
+        const showInputNumbers = ref(false);
+        const personasPorHabitacion = ref(Array(10).fill(1));
+        const habitacionesSeleccionadas = ref([]);
+        const habitacionActiva = ref({});
+        const mostrarDialog = ref(false);
+
+        const buscarCliente = () => {
+            if (telefono.value.trim() != '') {
+                axios.get(`${DIRECC_IP}/hotelbe/cliente/${telefono.value}`, 
+                ).then(response => {
+                    if(Object.keys(response.data).length > 0){
+                        toast.add({ severity: 'success', summary: 'Si existe', detail: 'El cliente si existe.', life: 4000 });
+                        telefono.value = '';
+                        nombre.value = response.data[0].nombreCliente;
+                        appat.value = response.data[0].ap_pat;
+                        apmat.value = response.data[0].ap_mat;
+                        correo.value = response.data[0].correo;
+                        telefonon.value = response.data[0].celular;
+                        rfc.value = response.data[0].rfc;
+                        direccion.value = response.data[0].direccion;
+                        clienteEncontrado.value = true;
+                    } else {
+                        toast.add({ severity: 'error', summary: 'Error: ', detail: 'No existe un cliente con ese número', life: 4000 });
+                        nombre.value = '';
+                        appat.value = '';
+                        apmat.value = '';
+                        correo.value = '';
+                        telefonon.value = null;
+                        rfc.value = '';
+                        direccion.value = '';
+                        clienteEncontrado.value = false;
+                    }
+                });
+            } else {
+                toast.add({ severity: 'warn', summary: 'Incompleto:', detail: 'No hay un número de teléfono escrito.', life: 4000 });
+            }
+        };
+
+        const conteoHabitaciones = computed(() => {
+            const conteo = { Simples: 0, Duo: 0, Dobles: 0 };
+            habitacionesSeleccionadas.value.forEach((tipo) => {
+                if (tipo === 'Simple') {
+                    conteo.Simples++;
+                } else if (tipo === 'Duo') {
+                    conteo.Duo++;
+                } else if (tipo === 'Doble') {
+                    conteo.Dobles++;
+                }
+            });
+            return conteo;
+        });
+
+        const setHabitaciones = (newVal) => {
+            if (newVal !== numHabitaciones.value) {
+                for (let i = 0; i < personasPorHabitacion.value.length; i++) {
+                    personasPorHabitacion.value[i] = 0; 
+                }
+                habitacionesSeleccionadas.value = [];
+                habitacionActiva.value = {}; // Reiniciar las habitaciones activas
+            }
+            showInputNumbers.value = true;
+        };
+
+        const fechaIni = ref('');
+        const fechaFin = ref('');
+        
+        async function getFechas(fechaI, fechaF) {
+            fechaIni.value = fechaI;
+            fechaFin.value = fechaF;
+        };
+
+        let disponibilidadTotal = false;
+        let disponibilidadTotalSimple = false;
+        let disponibilidadTotalDuo = false;
+        let disponibilidadTotalDoble = false;
+
+        const revisarReserva = () => {
+            if(fechaReserva.value === null) {
+                toast.add({ severity: 'warn', summary: 'Sin fecha', detail: 'Seleccione un rango válido.', life: 4000 });
+            }
+            const personasA = personasPorHabitacion.value.filter(valor => valor > 0);
+            const habitacionesNoVacias = habitacionesSeleccionadas.value.filter(habitacion => habitacion !== "");
+            const partesFechaI = fechaReserva.value[0].toLocaleDateString().split('/');
+            const fechaParseadaI = new Date(`${partesFechaI[2]}/${partesFechaI[1]}/${partesFechaI[0]}`);
+            const nuevaFechaI = new Date(fechaParseadaI);
+
+            const añoI = nuevaFechaI.getFullYear();
+            const mesI = nuevaFechaI.getMonth() + 1;
+            const díaI = nuevaFechaI.getDate();
+
+            const fechaFormateadaI = `${añoI}-${mesI.toString().padStart(2, '0')}-${díaI.toString().padStart(2, '0')}`;
+
+            const partesFechaF = fechaReserva.value[1].toLocaleDateString().split('/');
+            const fechaParseadaF = new Date(`${partesFechaF[2]}/${partesFechaF[1]}/${partesFechaF[0]}`);
+            const nuevaFechaF = new Date(fechaParseadaF);
+
+            const añoF = nuevaFechaF.getFullYear();
+            const mesF = nuevaFechaF.getMonth() + 1;
+            const díaF = nuevaFechaF.getDate();
+            const habitacionesPorTipo = {
+                Simple: [],
+                Duo: [],
+                Doble: []
+            };
+
+            const fechaFormateadaF = `${añoF}-${mesF.toString().padStart(2, '0')}-${díaF.toString().padStart(2, '0')}`;
+            getFechas(fechaFormateadaI, fechaFormateadaF);
+
+            const fechaActual = new Date();
+
+            const fechaFormateadaIDate = new Date(fechaFormateadaI);
+
+            // if (fechaFormateadaIDate >= fechaActual) {
+                if(habitacionesNoVacias.length > 0 && personasA.length > 0){
+                habitacionesNoVacias.forEach(habitacion => {
+                    let tipoHabitacion;
+                    if (habitacion.includes("Simple")) {
+                        tipoHabitacion = "Simple";
+                    } else if (habitacion.includes("Duo")) {
+                        tipoHabitacion = "Duo";
+                    } else if (habitacion.includes("Doble")) {
+                        tipoHabitacion = "Doble";
+                    } else {
+                        tipoHabitacion = "Desconocido";
+                    }
+                    habitacionesPorTipo[tipoHabitacion].push(habitacion);
+                });
+
+                const peticiones = [];
+
+                if (habitacionesPorTipo.Simple.length > 0) {
+                    peticiones.push(
+                        axios.get(`${DIRECC_IP}/hotelbe/tipohab/Simple`).then(response => {
+                            return axios.get(`${DIRECC_IP}/hotelbe/reservas/disponibilidad/${response.data[0].idTHabitacion}/${fechaFormateadaF}/${fechaFormateadaI}`);
+                        }).then(response => {
+                            return response.data >= habitacionesPorTipo.Simple.length;
+                        })
+                    );
+                }
+
+                if (habitacionesPorTipo.Duo.length > 0) {
+                    peticiones.push(
+                        axios.get(`${DIRECC_IP}/hotelbe/tipohab/Duo`).then(response => {
+                            return axios.get(`${DIRECC_IP}/hotelbe/reservas/disponibilidad/${response.data[0].idTHabitacion}/${fechaFormateadaF}/${fechaFormateadaI}`);
+                        }).then(response => {
+                            return response.data >= habitacionesPorTipo.Duo.length;
+                        })
+                    );
+                }
+
+                if (habitacionesPorTipo.Doble.length > 0) {
+                    peticiones.push(
+                        axios.get(`${DIRECC_IP}/hotelbe/tipohab/Doble`).then(response => {
+                            return axios.get(`${DIRECC_IP}/hotelbe/reservas/disponibilidad/${response.data[0].idTHabitacion}/${fechaFormateadaF}/${fechaFormateadaI}`);
+                        }).then(response => {
+                            return response.data >= habitacionesPorTipo.Doble.length;
+                        })
+                    );
+                }
+
+                Promise.all(peticiones).then(resultados => {
+                    if (resultados.every(resultado => resultado)) {
+                        toast.add({ severity: 'success', summary: 'Disponible.', detail: 'Si hay disponibilidad para reservar las habitaciones.', life: 4000 });
+                        disponibilidadTotal = true;
+                        mostrarDialog.value = true;
+                    } else {
+                        toast.add({ severity: 'error', summary: 'No disponible.', detail: 'No hay disponibilidad para reservar las habitaciones solicitadas.', life: 4000 });
+                    }
+                });
+                } else {
+                    toast.add({ severity: 'error', summary: 'Error: ', detail: 'No has agregado alguna habitación.', life: 4000 });
+            };
+            // } else {
+            //     toast.add({ severity: 'warn', summary: 'Invalido.', detail: 'Selecciona una fecha posterior o igual al día de hoy.', life: 4000 });
+            // }
+        };
+
+        const validarReserva = () => {
+            if (!numHabitaciones.value || !personasPorHabitacion.value.some((val) => val !== null)) {
+                return false;
+            }
+            return personasPorHabitacion.value.slice(0, numHabitaciones.value).reduce((acc, curr) => acc + curr, 0) <= 40;
+        };
+
+        const agregarHabitacion = (numero, tipo) => {
+            if(personasPorHabitacion.value[numero-1] > 0){
+                habitacionesSeleccionadas.value[numero - 1] = tipo;
+                habitacionActiva.value[numero] = tipo; 
+            } else {
+                toast.add({ severity: 'error', summary: 'Error: ', detail: 'No se puede agregar una habitación con 0 personas.', life: 4000 });
+            }
+        };
+
+        async function generarReserva(){
+            const habitacionesNoVacias = habitacionesSeleccionadas.value.filter(habitacion => habitacion !== "");
+            axios.post(`${DIRECC_IP}/hotelbe/reservas/newReserva`, {
+                "fechaLlegada": fechaIni.value,
+                "nombreCliente": nombre.value,
+                "apPaterno": appat.value,
+                "apMaterno": apmat.value,
+                "telefonoCli": telefonon.value,
+                "rfcCli": rfc.value,
+                "email": correo.value,
+                "direccion": direccion.value
+            }).then(response => {
+                habitacionesNoVacias.forEach(habitacion => {
+                console.log(habitacion);
+                axios.post(`${DIRECC_IP}/hotelbe/reservasHab/newReservaHab`, {
+                    "fechaLlegada": fechaIni.value,
+                    "fechaSalida": fechaFin.value,
+                    "tipoHab": habitacion
+                }).then(response => {
+                    toast.add({ severity: 'success', summary: 'Reserva exitosa', detail: 'Se registraron los datos correctamente.', life: 4000 });
+                }).catch(error => {
+                    if(error.response.status === 500) {
+                        toast.add({ severity: 'error', summary: 'Error: No se pudo agregar', detail: 'Seleccione una fecha válida', life: 4000 });
+                    } else {
+                        toast.add({ severity: 'error', summary: 'Error: No se pudo agregar', detail: 'Verifique los datos: '+ error, life: 4000 });
+                    }
+                });
+            });
+
+            }).catch(error => {
+                toast.add({ severity: 'error', summary: 'Error: No se pudo agregar', detail: 'Verifique los datos: '+ error, life: 4000 });
+            });
+        }
+
+        return {
+            generarReserva,
+            fechaIni,
+            telefono,
+            nombre,
+            appat,
+            apmat,
+            correo,
+            rfc,
+            direccion,
+            telefonon,
+            clienteEncontrado,
+            cliente,
+            fechaReserva,
+            numHabitaciones,
+            showInputNumbers,
+            personasPorHabitacion,
+            habitacionesSeleccionadas,
+            habitacionActiva,
+            mostrarDialog,
+            agregarHabitacion,
+            buscarCliente,
+            setHabitaciones,
+            revisarReserva,
+            validarReserva,
+            conteoHabitaciones,
+            getFechas
+        };
+    }
+};
+</script>
+
 <template>
     <div class="p-grid p-fluid">
+        <Toast />
         <div class="col-12">
             <div class="card">
                 <h3 class="mr-8">Registrar Reserva</h3>
@@ -13,31 +309,31 @@
                 <div class="p-fluid formgrid grid mt-5">
                     <div class="flex flex-column gap-2 col-4">
                         <label for="nombre">Nombre(s)</label>
-                        <InputText id="nombre" v-model="nombre" />
+                        <InputText id="nombre" v-model="nombre" :disabled="clienteEncontrado === true" />
                     </div>
                     <div class="flex flex-column gap-2 col-4">
                         <label for="appat">Apellido paterno</label>
-                        <InputText id="appat" v-model="appat" />
+                        <InputText id="appat" v-model="appat" :disabled="clienteEncontrado === true"/>
                     </div>
                     <div class="flex flex-column gap-2 col-4">
                         <label for="apmat">Apellido materno</label>
-                        <InputText id="apmat" v-model="apmat" />
+                        <InputText id="apmat" v-model="apmat" :disabled="clienteEncontrado === true"/>
                     </div>
                 </div>
 
                 <div class="p-fluid formgrid grid mt-1">
                     <div class="flex flex-column gap-2 col-6 mt-3">
                         <label for="correo">Correo electrónico</label>
-                        <InputText id="correo" v-model="correo" />
+                        <InputText id="correo" v-model="correo" :disabled="clienteEncontrado === true"/>
                     </div>
                     <div class="flex flex-column gap-2 col-6 mt-3">
                         <label for="telefonon">Teléfono</label>
-                        <InputNumber id="telefonon" v-model="telefonon" />
+                        <InputNumber id="telefonon" v-model="telefonon" :disabled="clienteEncontrado === true"/>
                     </div>
 
                     <div class="flex flex-column gap-2 col-6 mt-3">
                         <label for="rfc">RFC</label>
-                        <InputText id="rfc" v-model="rfc" />
+                        <InputText id="rfc" v-model="rfc" :disabled="clienteEncontrado === true"/>
                     </div>
 
                     
@@ -45,19 +341,19 @@
 
                 <div class="flex flex-column gap-2 mt-3">
                     <label for="direccion">Dirección</label>
-                        <InputText id="direccion" v-model="direccion" />
+                        <InputText id="direccion" v-model="direccion" :disabled="clienteEncontrado === true"/>
                 </div>
 
                     <div class="flex flex-column form grid grid gap-2 col-6 mt-1">
                         <label for="fechaReserva">Fecha de Reserva</label>
-                    <Calendar id="fechaReserva" v-model="fechaReserva" selectionMode="range" :manual-input="false" showIcon placeholder="Seleccione un rango de fechas" />
+                        <Calendar id="fechaReserva" v-model="fechaReserva" selectionMode="range" :manual-input="false" showIcon placeholder="Seleccione un rango de fechas" dateFormat="yy/mm/dd"/>
                     </div>
                     
                 
 
                 <div class="flex flex-column gap-2 formgrid grid col-3">
                     <label for="numHabitaciones">Número de Habitaciones</label>
-                    <InputNumber v-model="numHabitaciones" inputId="minmax-buttons" mode="decimal" showButtons :min="0" :max="10" @input="setHabitaciones" />
+                    <InputNumber v-model="numHabitaciones" inputId="minmax-buttons" mode="decimal" showButtons :min="0" :max="3" @input="setHabitaciones" />
                 </div>
 
                 <div v-for="n in numHabitaciones" :key="n" class="p-fluid formgrid grid gap-2 col-12">
@@ -72,7 +368,7 @@
                             incrementButtonClassName="p-button-secondary"
                             incrementButtonIcon="pi pi-plus"
                             decrementButtonIcon="pi pi-minus"
-                            :min="1"
+                            :min="0"
                             :max="4"
                             @click="agregarHabitacion(n, '')"
                         />
@@ -134,140 +430,45 @@
         </div>
 
         <!-- Ventana -->
-        <Dialog v-model:visible="mostrarDialog" :style="{width: '90vw'}" modal>
-    <template #header>
-        <h3>Habitaciones disponibles</h3>
-    </template>
-    <template #content>
-    <h4>Seleccione las habitaciones a asignar:</h4>
-    <div v-for="habitacion in habitacionesSeleccionadas" :key="habitacion.id">
-        <!-- Agrega esto para probar si el loop funciona -->
-        <p>Habitación seleccionada: {{ habitacion }}</p>
+
+        <Dialog v-model:visible="mostrarDialog" modal header="Confirmar reservación" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <div class="p-fluid formgrid grid mt-5">
+                <div class="flex flex-column gap-2 col-4">
+                    <label for="nombre">Nombre(s)</label>
+                    <InputText id="nombre" v-model="nombre" :disabled="clienteEncontrado === true" />
+                </div>
+                <div class="flex flex-column gap-2 col-4">
+                    <label for="appat">Apellido paterno</label>
+                    <InputText id="appat" v-model="appat" :disabled="clienteEncontrado === true"/>
+                </div>
+                <div class="flex flex-column gap-2 col-4">
+                    <label for="apmat">Apellido materno</label>
+                    <InputText id="apmat" v-model="apmat" :disabled="clienteEncontrado === true"/>
+                </div>
+            </div>
+            <div class="p-fluid formgrid grid mt-3">
+                <div class="flex flex-column gap-2 col-6">
+                    <label for="correo">Correo electrónico</label>
+                    <InputText id="correo" v-model="correo" :disabled="clienteEncontrado === true"/>
+                </div>
+                <div class="flex flex-column gap-2 col-6">
+                    <label for="telefonon">Teléfono</label>
+                    <InputNumber id="telefonon" inputId="withoutgrouping" v-model="telefonon" :disabled="clienteEncontrado === true"/>
+                </div>
+            </div>
+            <div class="p-fluid formgrid grid mt-3">
+                <div class="flex flex-column gap-2 col-12">
+                    <label for="fechaIni">Fecha de llegada</label>
+                    <Calendar id="fechaIni" v-model="fechaIni" :manual-input="false" showIcon placeholder="Seleccione la fecha de inicio" dateFormat="yy/mm/dd" disabled/>
+                </div>
+            </div>
+            <div class="text-right">
+                <Button label="Reservar" class="mt-4" icon="pi pi-book" @click="generarReserva()"/>
+            </div>
+        </Dialog>
+
     </div>
 </template>
-
-    <template #footer>
-        <Button label="Cerrar" icon="pi pi-check" @click="mostrarDialog = false" />
-    </template>
-</Dialog>
-
-    </div>
-</template>
-
-<script>
-import { ref, computed } from 'vue';
-import Calendar from 'primevue/calendar';
-import InputText from 'primevue/inputtext';
-import InputNumber from 'primevue/inputnumber';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-
-export default {
-    components: {
-        InputText,
-        Button,
-        Calendar,
-        InputNumber,
-        Dialog
-    },
-    setup() {
-        const telefono = ref('');
-        const nombre = ref('');
-        const appat = ref('');
-        const apmat = ref('');
-        const correo = ref('');
-        const direccion = ref('');
-        const telefonon = ref(null);
-        const clienteEncontrado = ref(false);
-        const cliente = ref('');
-        const fechaReserva = ref(null);
-        const numHabitaciones = ref(0);
-        const showInputNumbers = ref(false);
-        const personasPorHabitacion = ref(Array(10).fill(1));
-        const habitacionesSeleccionadas = ref([]);
-        const habitacionActiva = ref({});
-        const mostrarDialog = ref(false);
-
-        const buscarCliente = () => {
-            // Implementa la lógica para buscar un cliente
-            if (telefono.value === '1') {
-                clienteEncontrado.value = true;
-                // Aquí debes establecer los datos del cliente encontrado
-            } else {
-                clienteEncontrado.value = false;
-                alert('Número de teléfono no encontrado');
-            }
-        };
-
-        const conteoHabitaciones = computed(() => {
-            const conteo = { Simples: 0, Duo: 0, Dobles: 0 };
-            habitacionesSeleccionadas.value.forEach((tipo) => {
-                if (tipo === 'Simple') {
-                    conteo.Simples++;
-                } else if (tipo === 'Duo') {
-                    conteo.Duo++;
-                } else if (tipo === 'Doble') {
-                    conteo.Dobles++;
-                }
-            });
-            return conteo;
-        });
-
-        const setHabitaciones = (newVal) => {
-            if (newVal !== numHabitaciones.value) {
-                for (let i = 0; i < personasPorHabitacion.value.length; i++) {
-                    personasPorHabitacion.value[i] = 1; 
-                }
-                habitacionesSeleccionadas.value = [];
-                habitacionActiva.value = {}; // Reiniciar las habitaciones activas
-            }
-            showInputNumbers.value = true;
-        };
-
-        const revisarReserva = () => {
-            mostrarDialog.value = true; // Mostrar el dialogo de habitaciones
-        };
-
-        const validarReserva = () => {
-            if (!numHabitaciones.value || !personasPorHabitacion.value.some((val) => val !== null)) {
-                return false;
-            }
-            return personasPorHabitacion.value.slice(0, numHabitaciones.value).reduce((acc, curr) => acc + curr, 0) <= 40;
-        };
-
-        const agregarHabitacion = (numero, tipo) => {
-            habitacionesSeleccionadas.value[numero - 1] = tipo;
-            habitacionActiva.value[numero] = tipo; 
-        };
-
-        return {
-            telefono,
-            nombre,
-            appat,
-            apmat,
-            correo,
-            direccion,
-            telefonon,
-            clienteEncontrado,
-            cliente,
-            fechaReserva,
-            numHabitaciones,
-            showInputNumbers,
-            personasPorHabitacion,
-            habitacionesSeleccionadas,
-            habitacionActiva,
-            mostrarDialog,
-            agregarHabitacion,
-            buscarCliente,
-            setHabitaciones,
-            revisarReserva,
-            validarReserva,
-            conteoHabitaciones
-        };
-    }
-};
-</script>
-
 
 <style scoped>
 .card-room {

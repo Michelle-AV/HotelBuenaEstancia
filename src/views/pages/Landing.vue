@@ -398,7 +398,7 @@ export default {
     margin-top: -4%;
     transition: opacity 0.5s;
 }
-.img1 {
+/* .img1 {
     margin-top: 140px;
     margin-right: -40%;
     border-radius: 15px;
@@ -409,7 +409,7 @@ export default {
     margin-right: -40%;
     border-radius: 15px;
 
-}
+} */
 </style>
 
 <style scoped>
