@@ -189,8 +189,8 @@ h5 {
 .semi-circle-container::before {
     content: '';
     position: absolute;
-    width: 1800px;
-    height: 800px;
+    width: 200%;
+    height: 880px;
     background: #212267;
     border-radius: 50%;
     top: -230px;
@@ -219,12 +219,12 @@ h5 {
 .card-content::before {
     content: '';
     position: absolute;
-    width: 1800px;
+    width: 200%;
     height: 800px;
     background: #2d2e8b;
     border-radius: 50%;
     top: -320px;
-    left: -380px;
+    left: -50%;
     z-index: -1;
     overflow: hidden;
 }
