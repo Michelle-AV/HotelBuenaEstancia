@@ -5,7 +5,7 @@
     <div class="flex flex-column align-items-center justify-content-center">
         <div class="col-10 mx-auto semi-circle-container mt-5">
             <div class="card card-content">
-                <div class="flex align-items-center justify-content-center mt-5">
+                <div class="flex align-items-center justify-content-center mt-8" style="padding-top: 30px;">
                     <h1 class="txtcolor1" style="font-size: 4em"><strong>PREGUNTAS FRECUENTES</strong></h1>
                     <!-- <i class="pi pi-question-circle" style="font-size: 2em; vertical-align: middle"></i> -->
                 </div>
@@ -16,6 +16,7 @@
                 </div>
 
                 <!-- FAQ -->
+                <div style="padding-top: 83px;">
                 <div class="col-12 mt-5">
                     <div class="card">
                         <Button id="btn1" label="¿Cuántas habitaciones hay libres para hoy?" @click="sendQuestion(1)" />
@@ -92,6 +93,8 @@
                         </transition>
                     </div>
                 </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -236,7 +239,11 @@ h5 {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+    .card{
+    border: 0px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
+}
 .back-button {
         position: absolute;
         top: 20px;
@@ -247,4 +254,6 @@ h5 {
         z-index: 10; 
     }
 </style>
+  
+
   
