@@ -63,7 +63,7 @@ export default {
         }
 
         const logoUrl = computed(() => {
-            return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo1' : 'BE-logo'}.svg`;
+            return `layout/images/${layoutConfig.darkTheme.value ? 'BE-logo1' : 'BE-logo'}.png`;
         });
 
         const activeIndex = ref(0);
@@ -124,10 +124,10 @@ export default {
             <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3">
                 <!-- <a class="flex align-items-center" href="#"> <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-0 lg:mr-2" /><span class="text-900 font-medium text-2xl mr-8">Hotel BUES</span> </a> -->
                 <a class="flex align-items-center" href="/">
-                    <img :src="logoUrl" alt="Sakai Logo" height="50" class="mr-2 lg:mr-4" />
+                    <img :src="logoUrl" alt="Sakai Logo" height="10" class="logo-resize" />
                     <!-- <span class="text-900 font-medium text-2xl" style="white-space: nowrap;">Hotel Buena Estancia</span> -->
                     <!-- <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap;">Hotel Buena Estancia</span> -->
-                    <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap">Hotel BE</span>
+                    <span class="text-900 font-medium text-2xl mr-7 ml-2" style="white-space: nowrap"></span>
                 </a>
 
                 <a class="cursor-pointer block lg:hidden text-700 p-ripple" v-ripple v-styleclass="{ selector: '@next', enterClass: 'hidden', leaveToClass: 'hidden', hideOnOutsideClick: true }">
@@ -178,7 +178,7 @@ export default {
                 <div class="mx-4 md:mx-8 mt-0 md:mt-4">
                     <h1 class="texto-blanco text-6xl font-bold line-height-2"><span class="font-light block texto-blanco">Explora el lujo auténtico </span>y el encanto en el Hotel Buena Estancia</h1>
                     <p class="font-normal text-2xl line-height-3 md:mt-3 texto-blanco">Donde cada hospedaje es una experiencia inolvidable.</p>
-                    <Button label="Más información" class="p-button-rounded text-xl border-none mt-5 font-normal line-height-3 px-3"></Button>
+                    <router-link to="/test"> <Button href="/test" label="Más información" class="p-button-rounded text-xl border-none mt-5 font-normal line-height-3 px-3"></Button> </router-link>
                 </div>
             </div>
             <!--Home Close-->
@@ -211,8 +211,10 @@ export default {
             <!-- HabitacionesComponent Close -->
 
             <!-- ServiciosComponent -->
-            <div id="servicios" class="container">
-                <h1 style="margin-bottom: -200px" class="text-6xl title-font line-height-2">Conoce nuestros servicios</h1>
+            <div class="container" >
+                <h1 id="servicios"  style="padding-top: 250px" class="text-8xl title-font line-height-2 subtitle-font"><strong>CONOCE</strong></h1>
+                <p style="margin-top: -490; padding-bottom: 310;" class="text-3xl title-font">Los servicios que tenemos para ofrecerte</p>
+
 
                 <div class="card__container">
                     <article class="card__article">
@@ -249,7 +251,7 @@ export default {
             <!-- ServiciosComponent Close  -->
 
             <!--  -->
-            <div id="hero" class="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden" style="background-image: url('/demo/images/landing/exterior.jpeg'); background-size: cover; background-position: center; height: 100vh">
+            <div id="hero" class="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden" style="margin-top: 250px; background-image: url('/demo/images/landing/exterior2.png'); background-size: cover; background-position: center; height: 100vh">
                 <div class="components-container">
                     <div class="component-item" v-for="component in componentsData" :key="component.id" :style="{ backgroundColor: component.backgroundColor }">
                         <div class="circle" :style="{ backgroundColor: component.circleColor, boxShadow: '0 2px 4px rgba(0,0,0,0.25)' }">
@@ -288,7 +290,7 @@ export default {
                     </div>
 
                     <div class="flex justify-content-end flex-order-1 sm:flex-order-2 col-12 lg:col-6 p-0 fondo-img">
-                        <img v-if="cartaUno === true" src="/demo/images/landing/aboutus1.2.png" class="w-9" alt="mockup" />
+                        <img v-if="cartaUno === true" src="/demo/images/landing/aboutus1.2.png" class="w-9 img1" alt="mockup" />
                         <img v-else-if="cartaUno === false" src="/demo/images/landing/aboutus2.png" class="w-7 img2" alt="mockup" />
                     </div>
                 </div>
@@ -322,6 +324,9 @@ export default {
                     </div>
                 </div>
             </div>
+            <!--  -->
+            
+            <!--  -->
         </div>
     </div>
 </template>
@@ -351,6 +356,7 @@ export default {
     font-family: 'Poppins', sans-serif;
     width: 50rem;
     margin-top: 30px;
+    padding-right: 130px;
 }
 
 .school {
@@ -392,12 +398,27 @@ export default {
     margin-top: -4%;
     transition: opacity 0.5s;
 }
+.img1 {
+    margin-top: 140px;
+    margin-right: -40%;
+    border-radius: 15px;
+
+}
 .img2 {
-    margin-top: -7.5%;
+    margin-top: -15.5%;
+    margin-right: -40%;
+    border-radius: 15px;
+
 }
 </style>
 
 <style scoped>
+.logo-resize{
+    width: 100px;
+    height: 50px;
+    margin-bottom: -20px;
+}
+
 h5 {
     color: white;
 }
@@ -420,6 +441,7 @@ h5 {
 .content-wrapper {
     width: 100vw;
     max-width: 1600px;
+    padding-top: 150px;
     margin: auto;
     font-family: 'Poppins', sans-serif;
 }
@@ -508,6 +530,20 @@ h5 {
 
 .title-font{
     font-family: 'Poppins', sans-serif;
+    color: #181717;
+    margin-top: 0%;
+    margin-bottom: 80px ;
+}
+
+.subtitle-font{
+    font-family: 'Poppins', sans-serif;
+    color: #2d2e8b;
+
+}
+
+.edu-font{
+    font-family: 'Edu TAS Beginner', sans-serif;
+    /* color: #2d2e8b; */
 }
 
 * {
@@ -538,11 +574,13 @@ img {
 .card__container {
     display: grid;
     row-gap: 3.5rem;
+
 }
 
 .card__article {
     position: relative;
     overflow: hidden;
+
 }
 
 .card__img {
@@ -689,7 +727,7 @@ img {
 }
 .component-item {
     width: 27vw;
-    height: flex;
+    height: 300px;
     border-radius: 10px;
     overflow: visible;
     position: relative;
@@ -738,3 +776,4 @@ p {
     font-size: 1em;
 }
 </style>
+
