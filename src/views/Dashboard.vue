@@ -172,9 +172,9 @@ watch(
         </router-link>
     </div>
     <div class="body-dashboard">
-        <div id="miDiv">
+        <!-- <div id="miDiv">
             <img src="../../public/layout/images/BE-Logo.png" alt="Descripción de la imagen">
-        </div>
+        </div> -->
         <h1>Bienvenido(a) al sistema de gestión para el <br> Hotel Buena Estancia</h1>
     </div>
 </template>
@@ -189,7 +189,7 @@ watch(
     }
     .body-dashboard h1 {
         display: block;
-        text-align: left;
+        text-align: center;
         margin-left: 50px;
     }
     #miDiv {
