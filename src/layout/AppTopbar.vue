@@ -76,7 +76,7 @@ const isOutsideClicked = (event) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <h5 class="mt-3">Bienvenido @user</h5>
+            <!-- <h5 class="mt-3">Bienvenido @user</h5> -->
             <button @click="onSettingsClick()" class="p-link layout-topbar-button">
                 <i class="pi pi-sign-out"></i>
                 <span>Settings</span>

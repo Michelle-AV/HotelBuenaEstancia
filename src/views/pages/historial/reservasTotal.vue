@@ -21,10 +21,23 @@ export default {
         async function llenarTabla() {
             const response = await axios.get(`${DIRECC_IP}/hotelbe/reservas`);
             reservas.value = response.data;
-            console.log("Reservas: ", reservas.value);
         };
 
         async function confirm2(row){
+            const fechaActual = new Date();
+
+            const año = fechaActual.getFullYear();
+            const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+            const día = fechaActual.getDate().toString().padStart(2, '0');
+
+            const fechaFormateada = `${año}-${mes}-${día}`;
+
+            const horas = fechaActual.getHours().toString().padStart(2, '0');
+            const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+            const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+
+            const horaFormateada = `${horas}:${minutos}:${segundos}`;
+
             confirm.require({
                 message: `¿Estas seguro de que quieres actualizar el estado de la Reservación ${row.idReservacion}?`,
                 header: 'Confirmación',
@@ -36,8 +49,21 @@ export default {
                 accept: () => {
                     axios.put(`${DIRECC_IP}/hotelbe/reservas/actEstado/${row.idReservacion}`,
                     ).then(response => {
-                        toast.add({ severity: 'success', summary: 'Actualización exitosa', detail: 'Se actualizó el estado de la reservación correctamente.', life: 3000 });
-                        llenarTabla();
+                        axios.post(`${DIRECC_IP}/hotelbe/estancia/newEstancia`, {
+                            "fechaLlegadaEstancia": fechaFormateada,
+                            "horaLlegadaEstancia": horaFormateada,
+                            "cliente": {
+                                "idCliente":  row.cliente.idCliente
+                            },
+                            "reservacion": {
+                                "idReservacion": row.idReservacion
+                            }
+                        }).then(response => {
+                            toast.add({ severity: 'success', summary: 'Actualización exitosa', detail: 'Se actualizó el estado de la reservación correctamente.', life: 3000 });
+                            llenarTabla();
+                        }).catch(error => {
+                            toast.add({ severity: 'error', summary: 'Error: No se pudo borrar', detail: 'Ocurrió un error: '+ error, life: 3000 });
+                        });
                     }).catch(error => {
                         toast.add({ severity: 'error', summary: 'Error: No se pudo borrar', detail: 'Ocurrió un error: '+ error, life: 3000 });
                     });
@@ -107,6 +133,9 @@ export default {
                                 </template>
                                 <template v-else-if="slotProps.data.estado === 'ACTIVA'">
                                     <Tag class="ml-3" value="ACTIVA" severity="text"></Tag>
+                                </template>
+                                <template v-else-if="slotProps.data.estado === 'FINALIZADA'">
+                                    <Tag class="ml-3" value="FINALIZADA" severity="success"></Tag>
                                 </template>
                             </template>
                         </Column>

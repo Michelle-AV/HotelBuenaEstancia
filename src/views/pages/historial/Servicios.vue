@@ -5,6 +5,7 @@ import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
 import axios from 'axios';
+import Dropdown from 'primevue/dropdown';
 import { DIRECC_IP } from '@/service/direccionIP.js'
 
 import { useToast } from 'primevue/usetoast';
@@ -21,7 +22,7 @@ export default {
 
         async function registrarServicio() {
             if (nomService.value.trim() !== '' && precioS.value > 0) {
-                axios.post(`http://localhost:8080/hotelbe/servicio`, {
+                axios.post(`${DIRECC_IP}/hotelbe/servicio`, {
                     "descServicio": nomService.value,
                     "precioServicio": precioS.value
                 }).then(response => {
@@ -36,6 +37,9 @@ export default {
                 toast.add({ severity: 'warn', summary: 'Revisar', detail: 'Verifica que todos los campos esten completos', life: 3000 });
             }
         };
+
+        const serviciosR = ref();
+        const tipoSE = ref([]);
 
         const servicios = ref([]);
 
@@ -73,11 +77,27 @@ export default {
             });
         }
 
+        async function fetchServicios() {
+            try {
+                const response = await axios.get(`${DIRECC_IP}/hotelbe/servicio`);
+                tipoSE.value = response.data.map(item => ({ name: item.descServicio }));
+                console.log(tipoSE.value);
+            } catch (error) {
+                console.error('Error al obtener tipos de habitación', error);
+            }
+        }
+
         onMounted(() => {
             llenarTabla();
         });
 
+        onBeforeMount(() => {
+            fetchServicios();
+        });
+
         return {
+            serviciosR,
+            tipoSE,
             confirm2,
             nomService,
             refresh,
@@ -116,7 +136,8 @@ export default {
                 <TabView>
                     <TabPanel header="Servicios consumidos">
                         <p class="m-0">
-                           
+                            <h6>Selecciona el nombre del servicio:</h6>
+                            <Dropdown v-model="serviciosR" :options="tipoSE" optionLabel="name" placeholder="Elige un servicio" class="w-full md:w-14rem"/>
                         </p>
                     </TabPanel>
                     <TabPanel header="Añadir un nuevo servicio">

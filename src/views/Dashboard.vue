@@ -122,8 +122,8 @@ watch(
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Habitaciones disponibles</span>
-                        <div class="text-900 font-medium text-xl">20/20</div>
+                        <span class="block text-500 font-medium mb-3">Habitaciones</span>
+                        <div class="text-900 font-medium text-xl">Habitaciones registradas</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-green-100 border-round" style="width: 2.5rem; height: 2.5rem">
                         <i class="pi pi-arrow-right text-green-500 text-xl"></i>
@@ -162,7 +162,7 @@ watch(
                 <div class="flex justify-content-between mb-3">
                     <div>
                         <span class="block text-500 font-medium mb-3">Facturación</span>
-                        <div class="text-900 font-medium text-xl">Nueva factura</div>
+                        <div class="text-900 font-medium text-xl">Facturas generadas</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-purple-100 border-round" style="width: 2.5rem; height: 2.5rem">
                         <i class="pi pi-book text-purple-500 text-xl"></i>
@@ -170,109 +170,36 @@ watch(
                 </div>
             </div>
         </router-link>
-
-        <div class="col-12 xl:col-7">
-            <div class="card">
-                <h5>Recent Sales</h5>
-                <DataTable :value="products" :rows="10" :paginator="true" class="mt-5" responsiveLayout="scroll">
-                    <Column style="width: 15%">
-                        <template #header> Image </template>
-                        <template #body="slotProps">
-                            <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.image" width="50" class="shadow-2" />
-                        </template>
-                    </Column>
-                    <Column field="name" header="Name" :sortable="true" style="width: 35%"></Column>
-                    <Column field="price" header="Price" :sortable="true" style="width: 35%">
-                        <template #body="slotProps">
-                            {{ formatCurrency(slotProps.data.price) }}
-                        </template>
-                    </Column>
-                    <Column style="width: 15%">
-                        <template #header> View </template>
-                        <template #body>
-                            <Button icon="pi pi-search" type="button" class="p-button-text"></Button>
-                        </template>
-                    </Column>
-                </DataTable>
-            </div>
-            
+    </div>
+    <div class="body-dashboard">
+        <div id="miDiv">
+            <img src="../../public/layout/images/BE-Logo.png" alt="Descripción de la imagen">
         </div>
-        <div class="col-12 xl:col-5">
-            <div class="card">
-                <h5 class="mr-8">Calendario</h5>
-                <Calendar class="flex justify-content-center mt-5" v-model="date" inline showWeek />
-            </div>
-            <div class="card">
-                <div class="flex justify-content-between align-items-center mb-4">
-                    <h5>Best Selling Products</h5>
-                    <div>
-                        <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu2.toggle($event)"></Button>
-                        <Menu ref="menu2" :popup="true" :model="items"></Menu>
-                    </div>
-                </div>
-                <ul class="list-none p-0 m-0">
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Space T-Shirt</span>
-                            <div class="mt-1 text-600">Clothing</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-orange-500 h-full" style="width: 50%"></div>
-                            </div>
-                            <span class="text-orange-500 ml-3 font-medium">%50</span>
-                        </div>
-                    </li>
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Portal Sticker</span>
-                            <div class="mt-1 text-600">Accessories</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-cyan-500 h-full" style="width: 16%"></div>
-                            </div>
-                            <span class="text-cyan-500 ml-3 font-medium">%16</span>
-                        </div>
-                    </li>
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Supernova Sticker</span>
-                            <div class="mt-1 text-600">Accessories</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-pink-500 h-full" style="width: 67%"></div>
-                            </div>
-                            <span class="text-pink-500 ml-3 font-medium">%67</span>
-                        </div>
-                    </li>
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Wonders Notebook</span>
-                            <div class="mt-1 text-600">Office</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-green-500 h-full" style="width: 35%"></div>
-                            </div>
-                            <span class="text-green-500 ml-3 font-medium">%35</span>
-                        </div>
-                    </li>
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Mat Black Case</span>
-                            <div class="mt-1 text-600">Accessories</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-purple-500 h-full" style="width: 75%"></div>
-                            </div>
-                            <span class="text-purple-500 ml-3 font-medium">%75</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <h1>Bienvenido(a) al sistema de gestión para el <br> Hotel Buena Estancia</h1>
     </div>
 </template>
+
+<style scoped>
+    .body-dashboard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+        text-align: center;
+    }
+    .body-dashboard h1 {
+        display: block;
+        text-align: left;
+        margin-left: 50px;
+    }
+    #miDiv {
+        display: block;
+        width: 200px; /* Ancho deseado */
+        height: 100px; /* Alto deseado */
+    }
+    #miDiv img {
+        width: 100%; /* La imagen ocupará el 100% del ancho del contenedor */
+        height: 100%; /* La imagen ocupará el 100% del alto del contenedor */
+        object-fit: cover; /* Ajustar la imagen para cubrir el área del contenedor */
+    }
+</style>
